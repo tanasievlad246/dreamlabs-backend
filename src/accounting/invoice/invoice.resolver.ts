@@ -1,4 +1,10 @@
-import { Resolver } from '@nestjs/graphql';
+import { Resolver, Query } from '@nestjs/graphql';
+import { Invoice } from './invoice.entity';
 
-@Resolver()
-export class InvoiceResolver {}
+@Resolver(of => Invoice)
+export class InvoiceResolver {
+  @Query(() => String)
+  hello(): string {
+    return 'world';
+  }
+}
