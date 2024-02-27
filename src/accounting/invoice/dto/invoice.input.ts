@@ -2,11 +2,11 @@ import Currency from '@/common/enums/currency.enum';
 import { Field, Float, InputType } from '@nestjs/graphql';
 import {
   IsBoolean,
-  IsDateString,
   IsEnum,
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
 } from 'class-validator';
 
 @InputType()
@@ -25,8 +25,8 @@ export class CreateInvoiceInput {
   @Field({ nullable: true })
   storno?: boolean;
 
-  @IsNumber()
   @Field(() => Float)
+  @IsNumber()
   amount: number;
 
   @IsEnum(Currency)
@@ -41,7 +41,9 @@ export class CreateInvoiceInput {
   @Field(() => String)
   projectId: string;
 
-  @IsDateString()
-  @Field(() => Date)
-  paymentDate: Date;
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'date must be in YYYY-MM-DD format',
+  })
+  @Field(() => String)
+  paymentDate: string;
 }

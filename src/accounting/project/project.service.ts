@@ -1,0 +1,48 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Project } from './project.entity';
+import { DeleteResult, Repository } from 'typeorm';
+import { ProjectInputType } from './dto/project.input';
+import { NotFoundError } from 'rxjs';
+
+export class ProjectService {
+  constructor(
+    @InjectRepository(Project) private projectRepository: Repository<Project>,
+  ) {}
+
+  async createOne(project: ProjectInputType): Promise<Project> {
+    return await this.projectRepository.save(project);
+  }
+
+  async findAll(): Promise<Project[]> {
+    return await this.projectRepository.find();
+  }
+
+  async findOne(id: string): Promise<Project> {
+    return await this.projectRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async update(id: string, updatedProject: ProjectInputType): Promise<Project> {
+    const currentProject = await this.findOne(id);
+
+    if (!currentProject) {
+      throw new NotFoundError('Project not found');
+    }
+
+    const _updatedProject = this.projectRepository.merge(
+      currentProject,
+      updatedProject,
+    );
+
+    return await this.projectRepository.save(_updatedProject);
+  }
+
+  async delete(id: string): Promise<DeleteResult> {
+    return await this.projectRepository.delete({
+      id,
+    });
+  }
+}

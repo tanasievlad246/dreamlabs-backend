@@ -3,7 +3,7 @@ import { CustomerService } from './customer.service';
 import { Customer } from './customer.entity';
 import { CustomerInputType } from './dto/customer.input';
 
-@Resolver()
+@Resolver(() => Customer)
 export class CustomerResolver {
   constructor(private readonly customerService: CustomerService) {}
 

@@ -1,6 +1,6 @@
 import Currency from '@/common/enums/currency.enum';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Customer } from '../customer/customer.entity';
 import { Project } from '../project/project.entity';
 
@@ -10,7 +10,7 @@ import { Project } from '../project/project.entity';
 @ObjectType()
 export class Invoice {
   @Field(() => Int)
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
   @Field()
   @Column({
@@ -42,7 +42,7 @@ export class Invoice {
     type: 'date',
     default: () => 'CURRENT_DATE',
   })
-  @Field(() => Date)
+  @Field(() => String)
   paymentTerm: Date;
   @Field(() => Customer)
   @ManyToOne(() => Customer, (customer) => customer.invoices)
