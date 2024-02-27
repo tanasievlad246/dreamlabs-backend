@@ -2,6 +2,57 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Customer {
+  id: String!
+  name: String!
+  invoices: [Invoice!]!
+}
+
+type Project {
+  id: String!
+  name: String!
+  invoices: [Invoice!]!
+}
+
+type Invoice {
+  id: Int!
+  description: String!
+  storno: Boolean
+  amount: Float!
+  currency: Currency!
+  paymentTerm: DateTime!
+  customer: Customer!
+  project: Project!
+}
+
+enum Currency {
+  EUR
+  USD
+  CAD
+  ZAF
+  GBP
+  SEK
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
-  hello: String!
+  findAllInvoices: [Invoice!]!
+}
+
+type Mutation {
+  createInvoice(createInvoiceInput: CreateInvoiceInput!): Invoice!
+}
+
+input CreateInvoiceInput {
+  description: String
+  storno: Boolean
+  amount: Float!
+  currency: Currency!
+  customerId: String!
+  projectId: String!
+  paymentDate: DateTime!
 }
