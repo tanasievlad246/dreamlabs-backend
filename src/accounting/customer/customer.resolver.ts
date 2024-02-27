@@ -1,7 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CustomerService } from './customer.service';
 import { Customer } from './customer.entity';
-import { CustomerInputType } from './dto/customer.input';
+import { CreateCustomerInput } from './dto/customer.input';
+import { UpdateCustomerInput } from './dto/update-customer.input';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
@@ -12,10 +13,38 @@ export class CustomerResolver {
     return await this.customerService.findAll();
   }
 
+  @Query(() => Customer)
+  async findOneCustomer(
+    @Args('findOneCustomerInput') findOneCustomerInput: { id: string },
+  ): Promise<Customer> {
+    return await this.customerService.findOne(findOneCustomerInput.id);
+  }
+
   @Mutation(() => Customer)
   async createCustomer(
-    @Args('createCustomerInput') customerInputType: CustomerInputType,
+    @Args('createCustomerInput') createCustomerInput: CreateCustomerInput,
   ): Promise<Customer> {
-    return await this.customerService.createOne(customerInputType);
+    return await this.customerService.createOne(createCustomerInput);
+  }
+
+  @Mutation(() => Customer)
+  async updateCustomer(
+    @Args('updateCustomerInput') updateCustomerInput: UpdateCustomerInput,
+  ): Promise<Customer> {
+    return await this.customerService.update(
+      updateCustomerInput.id,
+      updateCustomerInput,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  async deleteOneCustomer(
+    @Args('deleteOneCustomerInput') deleteOneCustomer: UpdateCustomerInput,
+  ): Promise<boolean> {
+    if (await this.customerService.deleteOne(deleteOneCustomer.id)) {
+      return true;
+    }
+
+    return false;
   }
 }

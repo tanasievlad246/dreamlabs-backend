@@ -1,15 +1,16 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './project.entity';
 import { DeleteResult, Repository } from 'typeorm';
-import { ProjectInputType } from './dto/project.input';
+import { CreateProjectInput } from './dto/project.input';
 import { NotFoundError } from 'rxjs';
+import { UpdateProjectInput } from './dto/update-project.input';
 
 export class ProjectService {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
   ) {}
 
-  async createOne(project: ProjectInputType): Promise<Project> {
+  async createOne(project: CreateProjectInput): Promise<Project> {
     return await this.projectRepository.save(project);
   }
 
@@ -25,7 +26,10 @@ export class ProjectService {
     });
   }
 
-  async update(id: string, updatedProject: ProjectInputType): Promise<Project> {
+  async update(
+    id: string,
+    updatedProject: UpdateProjectInput,
+  ): Promise<Project> {
     const currentProject = await this.findOne(id);
 
     if (!currentProject) {

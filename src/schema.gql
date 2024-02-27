@@ -57,7 +57,9 @@ type Mutation {
   deleteOneInvoice(deleteOneInvoiceInput: UpdateInvoiceInput!): Boolean!
   updateOneInvoice(updateInvoiceInput: UpdateInvoiceInput!): Invoice!
   createOneProject(createProjectInput: ProjectInputType!): Project!
-  createCustomer(createCustomerInput: CustomerInputType!): Customer!
+  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+  updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
+  deleteOneCustomer(deleteOneCustomerInput: UpdateCustomerInput!): Boolean!
 }
 
 input CreateInvoiceInput {
@@ -74,6 +76,11 @@ input ProjectInputType {
   name: String!
 }
 
-input CustomerInputType {
+input CreateCustomerInput {
   name: String!
+}
+
+input UpdateCustomerInput {
+  name: String
+  id: String!
 }

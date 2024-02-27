@@ -46,4 +46,28 @@ export class InvoiceResolver {
       updatedInvoice,
     );
   }
+
+  @Mutation(() => Invoice)
+  async markOneInvoiceAsPaid(
+    @Args('markInvoicePaidInput') markInvoicePaidInput: { id: number },
+  ): Promise<Invoice> {
+    return this.invoiceService.markInvociePaid(markInvoicePaidInput.id);
+  }
+
+  async markOneInvoiceAsUnpaid(
+    @Args('markInvoicePaidInput') markInvoiceUnpaidInput: { id: number },
+  ): Promise<Invoice> {
+    return this.invoiceService.markInvoiceUnpaid(markInvoiceUnpaidInput.id);
+  }
+
+  async generateOneStornoInvoice(
+    @Args('generateInvoiceStornoInput')
+    generateInvoiceStornoInput: {
+      id: number;
+    },
+  ): Promise<Invoice> {
+    return await this.invoiceService.generateStornoInvoice(
+      generateInvoiceStornoInput.id,
+    );
+  }
 }

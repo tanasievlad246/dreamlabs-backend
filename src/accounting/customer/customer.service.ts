@@ -1,15 +1,16 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from './customer.entity';
 import { DeleteResult, Repository } from 'typeorm';
-import { CustomerInputType } from './dto/customer.input';
+import { CreateCustomerInput } from './dto/customer.input';
 import { NotFoundError } from 'rxjs';
+import { UpdateCustomerInput } from './dto/update-customer.input';
 
 export class CustomerService {
   constructor(
     @InjectRepository(Customer) private customerRepo: Repository<Customer>,
   ) {}
 
-  async createOne(customer: CustomerInputType): Promise<Customer> {
+  async createOne(customer: CreateCustomerInput): Promise<Customer> {
     return await this.customerRepo.save(customer);
   }
 
@@ -33,7 +34,7 @@ export class CustomerService {
 
   async update(
     id: string,
-    updatedCustomer: CustomerInputType,
+    updatedCustomer: UpdateCustomerInput,
   ): Promise<Customer> {
     const currentCustomer = await this.findOne(id);
 

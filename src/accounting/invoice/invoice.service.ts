@@ -45,13 +45,13 @@ export class InvoiceService {
   }
 
   async updateOne(id: number, upadtedInvoice: UpdateInvoiceInput) {
-    const invocie = await this.invoiceRepo.findOne({
+    const invoice = await this.invoiceRepo.findOne({
       where: {
         id,
       },
     });
 
-    const newInvoice = this.invoiceRepo.merge(invocie, upadtedInvoice);
+    const newInvoice = this.invoiceRepo.merge(invoice, upadtedInvoice);
 
     return await this.invoiceRepo.save(newInvoice);
   }
@@ -62,5 +62,25 @@ export class InvoiceService {
         id,
       },
     });
+  }
+
+  async markInvociePaid(id: number): Promise<Invoice> {
+    const invoice = await this.findOne(id);
+    invoice.isPaid = true;
+    return await this.invoiceRepo.save(invoice);
+  }
+
+  async markInvoiceUnpaid(id: number): Promise<Invoice> {
+    const invoice = await this.findOne(id);
+    invoice.isPaid = false;
+    return await this.invoiceRepo.save(invoice);
+  }
+
+  async generateStornoInvoice(id: number): Promise<Invoice> {
+    const invoice = await this.findOne(id);
+    const newInvoice = this.invoiceRepo.create();
+    const storno = this.invoiceRepo.merge(invoice, newInvoice);
+    storno.amount = 0 - invoice.amount;
+    return await this.invoiceRepo.save(storno);
   }
 }
