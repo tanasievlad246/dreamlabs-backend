@@ -8,8 +8,6 @@ import { AccountingModule } from './accounting/accounting.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-console.log(process.env);
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +25,6 @@ console.log(process.env);
       database: process.env.DB_NAME,
       logging: process.env.NODE_ENV !== 'production',
       entities: ['dist/**/*.entity.{ts,js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
     }),
     AccountingModule,
   ],

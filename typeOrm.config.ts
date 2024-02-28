@@ -13,7 +13,7 @@ export const config: DataSourceOptions = {
   database: process.env.DB_NAME,
   logging: process.env.NODE_ENV !== 'production',
   entities: ['dist/**/*.entity.{ts,js}'],
-  migrations: ['./migrations/*.{ts,js}'],
+  migrations: ['migrations/*.{ts,js}'],
 };
 
 export default new DataSource(config);

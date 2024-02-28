@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { CustomerService } from '../customer/customer.service';
 import { ProjectService } from '../project/project.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
@@ -13,11 +13,12 @@ export class InvoiceService {
     @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
     private readonly customerService: CustomerService,
     private readonly projectService: ProjectService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAll(): Promise<Invoice[]> {
     return await this.invoiceRepo.find({
-      relations: ['customer', 'project'],
+      relations: ['customer', 'project', 'storno'],
     });
   }
 
@@ -77,10 +78,30 @@ export class InvoiceService {
   }
 
   async generateStornoInvoice(id: number): Promise<Invoice> {
-    const invoice = await this.findOne(id);
-    const newInvoice = this.invoiceRepo.create();
-    const storno = this.invoiceRepo.merge(invoice, newInvoice);
-    storno.amount = 0 - invoice.amount;
-    return await this.invoiceRepo.save(storno);
+    let stornoInvoie: Invoice;
+    await this.dataSource.transaction(async (manager) => {
+      const invRepo = manager.getRepository(Invoice);
+      const invoice = await invRepo.findOne({
+        where: { id },
+        relations: ['project', 'customer'],
+      });
+
+      const storno = invRepo.create({
+        description: invoice.description,
+        currency: invoice.currency,
+        isPaid: invoice.isPaid,
+        paymentTerm: invoice.paymentTerm,
+        project: invoice.project,
+        customer: invoice.customer,
+        amount: 0 - invoice.amount,
+        storno: invoice,
+      });
+
+      stornoInvoie = await invRepo.save(storno);
+
+      invoice.storno = storno;
+      await invRepo.save(invoice);
+    });
+    return stornoInvoie;
   }
 }

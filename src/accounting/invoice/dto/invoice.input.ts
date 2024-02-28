@@ -18,13 +18,6 @@ export class CreateInvoiceInput {
   @Field({ nullable: true })
   description?: string;
 
-  @IsOptional()
-  @IsBoolean({
-    message: 'The storno value needs to be boolean',
-  })
-  @Field({ nullable: true })
-  storno?: number;
-
   @Field(() => Float)
   @IsNumber()
   amount: number;

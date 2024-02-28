@@ -55,12 +55,14 @@ export class InvoiceResolver {
     return this.invoiceService.markInvociePaid(markInvoicePaidInput.id);
   }
 
+  @Mutation(() => Invoice)
   async markOneInvoiceAsUnpaid(
     @Args('markInvoicePaidInput') markInvoiceUnpaidInput: InvoiceIdInput,
   ): Promise<Invoice> {
     return this.invoiceService.markInvoiceUnpaid(markInvoiceUnpaidInput.id);
   }
 
+  @Mutation(() => Invoice)
   async generateOneStornoInvoice(
     @Args('generateInvoiceStornoInput')
     generateInvoiceStornoInput: InvoiceIdInput,

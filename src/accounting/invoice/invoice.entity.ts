@@ -3,6 +3,7 @@ import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -28,8 +29,9 @@ export class Invoice {
   @Field({
     nullable: true,
   })
-  @OneToOne(() => Invoice)
-  storno?: number;
+  @OneToOne(() => Invoice, { nullable: true })
+  @JoinColumn()
+  storno: Invoice;
 
   @Field(() => Float)
   @Column({

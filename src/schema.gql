@@ -11,7 +11,7 @@ type Project {
 type Invoice {
   id: Int!
   description: String!
-  storno: Float
+  storno: Invoice
   amount: Float!
   currency: Currency!
   paymentTerm: String!
@@ -46,7 +46,6 @@ type Query {
 
 input UpdateInvoiceInput {
   description: String
-  storno: Float
   amount: Float
   currency: Currency
   customerId: String
@@ -68,6 +67,8 @@ type Mutation {
   deleteOneInvoice(deleteOneInvoiceInput: UpdateInvoiceInput!): Boolean!
   updateOneInvoice(updateInvoiceInput: UpdateInvoiceInput!): Invoice!
   markOneInvoiceAsPaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
+  markOneInvoiceAsUnpaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
+  generateOneStornoInvoice(generateInvoiceStornoInput: InvoiceIdInput!): Invoice!
   createOneProject(createProjectInput: CreateProjectInput!): Project!
   updateOneProject(updateOneProjectInput: UpdateProjectInput!): Project!
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
@@ -77,7 +78,6 @@ type Mutation {
 
 input CreateInvoiceInput {
   description: String
-  storno: Float
   amount: Float!
   currency: Currency!
   customerId: String!
