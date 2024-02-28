@@ -6,6 +6,10 @@ import { ProjectService } from '../project/project.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { Invoice } from './invoice.entity';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
+import {
+  AssignInvoiceToCustomerInput,
+  AssignInvoiceToProjetInput,
+} from './dto/assign-invoice.input';
 
 @Injectable()
 export class InvoiceService {
@@ -23,21 +27,42 @@ export class InvoiceService {
   }
 
   async createOne(inv: CreateInvoiceInput): Promise<Invoice> {
-    const project = await this.projectService.findOne(inv.projectId);
-
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
-
-    const customer = await this.customerService.findOne(inv.customerId);
-
-    if (!customer) {
-      throw new NotFoundException('Project not found');
-    }
-
     const invoice = this.invoiceRepo.create(inv);
-    invoice.customer = customer;
+
+    if (inv.projectId) {
+      const project = await this.projectService.findOne(inv.projectId);
+      invoice.project = project;
+    }
+
+    if (inv.customerId) {
+      const customer = await this.customerService.findOne(inv.customerId);
+      invoice.customer = customer;
+    }
+
+    return await this.invoiceRepo.save(invoice);
+  }
+
+  async assignInvoiceToProject(
+    assignInvoiceToProjectInput: AssignInvoiceToProjetInput,
+  ): Promise<Invoice> {
+    const { invoiceId, projectId } = assignInvoiceToProjectInput;
+    const project = await this.projectService.findOne(projectId);
+    const invoice = await this.findOne(invoiceId);
+
     invoice.project = project;
+
+    return await this.invoiceRepo.save(invoice);
+  }
+
+  async assignInvoiceToCustomer(
+    assignInvoiceToCustomerInput: AssignInvoiceToCustomerInput,
+  ): Promise<Invoice> {
+    const { invoiceId, customerId } = assignInvoiceToCustomerInput;
+    const customer = await this.customerService.findOne(customerId);
+    const invoice = await this.findOne(invoiceId);
+
+    invoice.customer = customer;
+
     return await this.invoiceRepo.save(invoice);
   }
 

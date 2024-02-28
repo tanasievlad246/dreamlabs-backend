@@ -4,6 +4,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/project.input';
 import { NotFoundError } from 'rxjs';
 import { UpdateProjectInput } from './dto/update-project.input';
+import { NotFoundException } from '@nestjs/common';
 
 export class ProjectService {
   constructor(
@@ -19,11 +20,17 @@ export class ProjectService {
   }
 
   async findOne(id: string): Promise<Project> {
-    return await this.projectRepository.findOne({
+    const project = await this.projectRepository.findOne({
       where: {
         id,
       },
     });
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    return project;
   }
 
   async update(

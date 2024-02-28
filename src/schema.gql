@@ -16,8 +16,8 @@ type Invoice {
   currency: Currency!
   paymentTerm: String!
   isPaid: Boolean!
-  customer: Customer!
-  project: Project!
+  customer: Customer
+  project: Project
 }
 
 enum Currency {
@@ -80,8 +80,8 @@ input CreateInvoiceInput {
   description: String
   amount: Float!
   currency: Currency!
-  customerId: String!
-  projectId: String!
+  customerId: String
+  projectId: String
   paymentDate: String!
 }
 

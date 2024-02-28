@@ -4,6 +4,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CreateCustomerInput } from './dto/customer.input';
 import { NotFoundError } from 'rxjs';
 import { UpdateCustomerInput } from './dto/update-customer.input';
+import { NotFoundException } from '@nestjs/common';
 
 export class CustomerService {
   constructor(
@@ -19,11 +20,17 @@ export class CustomerService {
   }
 
   async findOne(id: string): Promise<Customer> {
-    return await this.customerRepo.findOne({
+    const customer = await this.customerRepo.findOne({
       where: {
         id,
       },
     });
+
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    return customer;
   }
 
   async deleteOne(id: string): Promise<DeleteResult> {

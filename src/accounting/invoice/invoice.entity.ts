@@ -36,6 +36,7 @@ export class Invoice {
   @Field(() => Float)
   @Column({
     nullable: false,
+    type: 'decimal',
   })
   amount: number;
 
@@ -62,11 +63,13 @@ export class Invoice {
   @Field(() => Boolean)
   isPaid: boolean;
 
-  @Field(() => Customer)
-  @ManyToOne(() => Customer, (customer) => customer.invoices)
+  @Field(() => Customer, { nullable: true })
+  @ManyToOne(() => Customer, (customer) => customer.invoices, {
+    nullable: true,
+  })
   customer: Customer;
 
-  @Field(() => Project)
-  @ManyToOne(() => Project, (project) => project.invoices)
+  @Field(() => Project, { nullable: true })
+  @ManyToOne(() => Project, (project) => project.invoices, { nullable: true })
   project: Project;
 }

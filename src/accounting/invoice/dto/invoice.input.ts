@@ -19,19 +19,21 @@ export class CreateInvoiceInput {
   description?: string;
 
   @Field(() => Float)
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 4 })
   amount: number;
 
   @IsEnum(Currency)
   @Field(() => Currency)
   currency: Currency;
 
+  @IsOptional()
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   customerId: string;
 
+  @IsOptional()
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   projectId: string;
 
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
