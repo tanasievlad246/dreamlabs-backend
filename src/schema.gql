@@ -11,10 +11,11 @@ type Project {
 type Invoice {
   id: Int!
   description: String!
-  storno: Boolean
+  storno: Float
   amount: Float!
   currency: Currency!
   paymentTerm: String!
+  isPaid: Boolean!
   customer: Customer!
   project: Project!
 }
@@ -38,12 +39,14 @@ type Query {
   findAllInvoices: [Invoice!]!
   findOneInvoice(findOneInvoiceInput: UpdateInvoiceInput!): Invoice!
   findAllProjects: [Project!]!
+  findOneProject(findOneProjectInput: ProjectIdInput!): Project!
   findAllCustomers: [Customer!]!
+  findOneCustomer(findOneCustomerInput: CustomerIdInput!): Customer!
 }
 
 input UpdateInvoiceInput {
   description: String
-  storno: Boolean
+  storno: Float
   amount: Float
   currency: Currency
   customerId: String
@@ -52,11 +55,21 @@ input UpdateInvoiceInput {
   id: Int!
 }
 
+input ProjectIdInput {
+  id: String!
+}
+
+input CustomerIdInput {
+  id: String!
+}
+
 type Mutation {
   createInvoice(createInvoiceInput: CreateInvoiceInput!): Invoice!
   deleteOneInvoice(deleteOneInvoiceInput: UpdateInvoiceInput!): Boolean!
   updateOneInvoice(updateInvoiceInput: UpdateInvoiceInput!): Invoice!
-  createOneProject(createProjectInput: ProjectInputType!): Project!
+  markOneInvoiceAsPaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
+  createOneProject(createProjectInput: CreateProjectInput!): Project!
+  updateOneProject(updateOneProjectInput: UpdateProjectInput!): Project!
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
   deleteOneCustomer(deleteOneCustomerInput: UpdateCustomerInput!): Boolean!
@@ -64,7 +77,7 @@ type Mutation {
 
 input CreateInvoiceInput {
   description: String
-  storno: Boolean
+  storno: Float
   amount: Float!
   currency: Currency!
   customerId: String!
@@ -72,8 +85,17 @@ input CreateInvoiceInput {
   paymentDate: String!
 }
 
-input ProjectInputType {
+input InvoiceIdInput {
+  id: Int!
+}
+
+input CreateProjectInput {
   name: String!
+}
+
+input UpdateProjectInput {
+  name: String
+  id: String!
 }
 
 input CreateCustomerInput {

@@ -3,6 +3,7 @@ import { Invoice } from './invoice.entity';
 import { InvoiceService } from './invoice.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
+import { InvoiceIdInput } from './dto/invoice-id.input';
 
 @Resolver(() => Invoice)
 export class InvoiceResolver {
@@ -49,22 +50,20 @@ export class InvoiceResolver {
 
   @Mutation(() => Invoice)
   async markOneInvoiceAsPaid(
-    @Args('markInvoicePaidInput') markInvoicePaidInput: { id: number },
+    @Args('markInvoicePaidInput') markInvoicePaidInput: InvoiceIdInput,
   ): Promise<Invoice> {
     return this.invoiceService.markInvociePaid(markInvoicePaidInput.id);
   }
 
   async markOneInvoiceAsUnpaid(
-    @Args('markInvoicePaidInput') markInvoiceUnpaidInput: { id: number },
+    @Args('markInvoicePaidInput') markInvoiceUnpaidInput: InvoiceIdInput,
   ): Promise<Invoice> {
     return this.invoiceService.markInvoiceUnpaid(markInvoiceUnpaidInput.id);
   }
 
   async generateOneStornoInvoice(
     @Args('generateInvoiceStornoInput')
-    generateInvoiceStornoInput: {
-      id: number;
-    },
+    generateInvoiceStornoInput: InvoiceIdInput,
   ): Promise<Invoice> {
     return await this.invoiceService.generateStornoInvoice(
       generateInvoiceStornoInput.id,

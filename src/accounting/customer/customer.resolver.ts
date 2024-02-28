@@ -3,6 +3,7 @@ import { CustomerService } from './customer.service';
 import { Customer } from './customer.entity';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
+import { CustomerIdInput } from './dto/customer-id.input';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
@@ -15,7 +16,7 @@ export class CustomerResolver {
 
   @Query(() => Customer)
   async findOneCustomer(
-    @Args('findOneCustomerInput') findOneCustomerInput: { id: string },
+    @Args('findOneCustomerInput') findOneCustomerInput: CustomerIdInput,
   ): Promise<Customer> {
     return await this.customerService.findOne(findOneCustomerInput.id);
   }

@@ -3,6 +3,7 @@ import { ProjectService } from './project.service';
 import { Project } from './project.entity';
 import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
+import { ProjectIdInput } from './dto/project-id.input';
 
 @Resolver(() => Project)
 export class ProjectResolver {
@@ -15,7 +16,7 @@ export class ProjectResolver {
 
   @Query(() => Project)
   async findOneProject(
-    @Args('findOneProjectInput') findOneProjectInput: { id: string },
+    @Args('findOneProjectInput') findOneProjectInput: ProjectIdInput,
   ): Promise<Project> {
     return this.projectService.findOne(findOneProjectInput.id);
   }
