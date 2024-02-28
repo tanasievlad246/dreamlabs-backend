@@ -41,8 +41,4 @@ import { RequestLogger } from './common/middleware/requestLogger';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestLogger).forRoutes(`*`);
-  }
-}
+export class AppModule {}
