@@ -2,13 +2,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from './customer.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateCustomerInput } from './dto/customer.input';
-import { NotFoundError } from 'rxjs';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { NotFoundException } from '@nestjs/common';
+import { Inject, NotFoundException } from '@nestjs/common';
+import { Logger } from 'winston';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 export class CustomerService {
   constructor(
     @InjectRepository(Customer) private customerRepo: Repository<Customer>,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async createOne(customer: CreateCustomerInput): Promise<Customer> {
@@ -27,6 +29,7 @@ export class CustomerService {
     });
 
     if (!customer) {
+      this.logger.error({ id, message: 'Customer not found' });
       throw new NotFoundException('Customer not found');
     }
 
@@ -44,10 +47,6 @@ export class CustomerService {
     updatedCustomer: UpdateCustomerInput,
   ): Promise<Customer> {
     const currentCustomer = await this.findOne(id);
-
-    if (!currentCustomer) {
-      throw new NotFoundError('Customer not found');
-    }
 
     const _updatedCustomer = this.customerRepo.merge(
       currentCustomer,

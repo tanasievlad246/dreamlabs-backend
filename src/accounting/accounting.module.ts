@@ -9,10 +9,16 @@ import { ProjectService } from './project/project.service';
 import { ProjectResolver } from './project/project.resolver';
 import { CustomerService } from './customer/customer.service';
 import { CustomerResolver } from './customer/customer.resolver';
+import { LoggingInterceptor } from '@/common/interceptors/loggingInterceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Invoice, Customer, Project])],
   providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
     InvoiceService,
     InvoiceResolver,
     ProjectService,

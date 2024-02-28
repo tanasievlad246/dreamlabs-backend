@@ -2,13 +2,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './project.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/project.input';
-import { NotFoundError } from 'rxjs';
 import { UpdateProjectInput } from './dto/update-project.input';
-import { NotFoundException } from '@nestjs/common';
+import { Inject, NotFoundException } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 export class ProjectService {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async createOne(project: CreateProjectInput): Promise<Project> {
@@ -27,6 +29,7 @@ export class ProjectService {
     });
 
     if (!project) {
+      this.logger.error({ id, message: 'Invalid project id input on find project' });
       throw new NotFoundException('Project not found');
     }
 
@@ -40,7 +43,8 @@ export class ProjectService {
     const currentProject = await this.findOne(id);
 
     if (!currentProject) {
-      throw new NotFoundError('Project not found');
+      this.logger.error({ id, message: 'Invalid project id input on update project' });
+      throw new NotFoundException('Project not found');
     }
 
     const _updatedProject = this.projectRepository.merge(

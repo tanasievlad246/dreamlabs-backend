@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { CustomerService } from '../customer/customer.service';
@@ -10,11 +10,14 @@ import {
   AssignInvoiceToCustomerInput,
   AssignInvoiceToProjetInput,
 } from './dto/assign-invoice.input';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Injectable()
 export class InvoiceService {
   constructor(
     @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly customerService: CustomerService,
     private readonly projectService: ProjectService,
     private readonly dataSource: DataSource,
@@ -83,11 +86,17 @@ export class InvoiceService {
   }
 
   async findOne(id: number): Promise<Invoice> {
-    return await this.invoiceRepo.findOne({
+    const invoice = await this.invoiceRepo.findOne({
       where: {
         id,
       },
     });
+
+    if (!invoice) {
+      this.logger.error({ id, message: 'Invoice not found' });
+      throw new NotFoundException('Invoice not found');
+    }
+    return invoice;
   }
 
   async markInvociePaid(id: number): Promise<Invoice> {
