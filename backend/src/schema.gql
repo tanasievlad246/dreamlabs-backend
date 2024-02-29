@@ -1,0 +1,109 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Project {
+  id: String!
+  name: String!
+  invoices: [Invoice!]!
+}
+
+type Invoice {
+  id: Int!
+  description: String!
+  storno: Invoice
+  amount: Float!
+  currency: Currency!
+  paymentTerm: String!
+  isPaid: Boolean!
+  customer: Customer
+  project: Project
+}
+
+enum Currency {
+  EUR
+  USD
+  CAD
+  ZAF
+  GBP
+  SEK
+}
+
+type Customer {
+  id: String!
+  name: String!
+  invoices: [Invoice!]!
+}
+
+type Query {
+  findAllInvoices: [Invoice!]!
+  findOneInvoice(findOneInvoiceInput: UpdateInvoiceInput!): Invoice!
+  findAllProjects: [Project!]!
+  findOneProject(findOneProjectInput: ProjectIdInput!): Project!
+  findAllCustomers: [Customer!]!
+  findOneCustomer(findOneCustomerInput: CustomerIdInput!): Customer!
+}
+
+input UpdateInvoiceInput {
+  description: String
+  amount: Float
+  currency: Currency
+  customerId: String
+  projectId: String
+  paymentDate: String
+  id: Int!
+}
+
+input ProjectIdInput {
+  id: String!
+}
+
+input CustomerIdInput {
+  id: String!
+}
+
+type Mutation {
+  createInvoice(createInvoiceInput: CreateInvoiceInput!): Invoice!
+  deleteOneInvoice(deleteOneInvoiceInput: UpdateInvoiceInput!): Boolean!
+  updateOneInvoice(updateInvoiceInput: UpdateInvoiceInput!): Invoice!
+  markOneInvoiceAsPaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
+  markOneInvoiceAsUnpaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
+  generateOneStornoInvoice(generateInvoiceStornoInput: InvoiceIdInput!): Invoice!
+  createOneProject(createProjectInput: CreateProjectInput!): Project!
+  updateOneProject(updateOneProjectInput: UpdateProjectInput!): Project!
+  deleteOneProject(deleteOneProjectInput: ProjectIdInput!): Boolean!
+  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+  updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
+  deleteOneCustomer(deleteOneCustomerInput: UpdateCustomerInput!): Boolean!
+}
+
+input CreateInvoiceInput {
+  description: String
+  amount: Float!
+  currency: Currency!
+  customerId: String
+  projectId: String
+  paymentDate: String!
+}
+
+input InvoiceIdInput {
+  id: Int!
+}
+
+input CreateProjectInput {
+  name: String!
+}
+
+input UpdateProjectInput {
+  name: String
+  id: String!
+}
+
+input CreateCustomerInput {
+  name: String!
+}
+
+input UpdateCustomerInput {
+  name: String
+  id: String!
+}
