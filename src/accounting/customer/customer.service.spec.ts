@@ -4,36 +4,10 @@ import { Customer } from './customer.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateCustomerInput } from './dto/update-customer.input';
+import { EXAMPLE_CUSTOMER, mockRepository } from '../mocks';
 
 describe('CustomerService', () => {
   let service: CustomerService;
-
-  // Mock repository with example values
-  const EXAMPLE_CUSTOMER = {
-    id: '1',
-    name: 'John Doe',
-    invoices: [], // Assuming invoices is an array of invoice entities
-  };
-
-  const mockRepository = jest.fn(() => ({
-    save: jest
-      .fn()
-      .mockImplementation((customer) =>
-        Promise.resolve({ ...EXAMPLE_CUSTOMER, ...customer }),
-      ),
-    find: jest.fn().mockResolvedValue([EXAMPLE_CUSTOMER]),
-    findOne: jest.fn().mockImplementation(({ where: { id } }) => {
-      if (id === EXAMPLE_CUSTOMER.id) {
-        return Promise.resolve(EXAMPLE_CUSTOMER);
-      } else {
-        return Promise.resolve(null);
-      }
-    }),
-    delete: jest.fn().mockResolvedValue({ affected: 1 }),
-    merge: jest.fn().mockImplementation((currentCustomer, updatedCustomer) => {
-      return { ...currentCustomer, ...updatedCustomer };
-    }),
-  }));
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

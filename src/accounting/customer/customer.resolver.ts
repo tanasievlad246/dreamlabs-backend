@@ -48,7 +48,9 @@ export class CustomerResolver {
   async deleteOneCustomer(
     @Args('deleteOneCustomerInput') deleteOneCustomer: UpdateCustomerInput,
   ): Promise<boolean> {
-    if (await this.customerService.deleteOne(deleteOneCustomer.id)) {
+    const result = await this.customerService.deleteOne(deleteOneCustomer.id);
+
+    if (result.affected > 0) {
       return true;
     }
 
