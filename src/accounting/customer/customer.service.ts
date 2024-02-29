@@ -3,14 +3,10 @@ import { Customer } from './customer.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  NotFoundException,
-} from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
+import { AccountingService } from '../types';
 
-export class CustomerService {
+export class CustomerService implements AccountingService<Customer> {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepo: Repository<Customer>,
@@ -52,7 +48,7 @@ export class CustomerService {
     });
   }
 
-  async update(
+  async updateOne(
     id: string,
     updatedCustomer: UpdateCustomerInput,
   ): Promise<Customer> {

@@ -38,7 +38,7 @@ export class CustomerResolver {
   async updateCustomer(
     @Args('updateCustomerInput') updateCustomerInput: UpdateCustomerInput,
   ): Promise<Customer> {
-    return await this.customerService.update(
+    return await this.customerService.updateOne(
       updateCustomerInput.id,
       updateCustomerInput,
     );
