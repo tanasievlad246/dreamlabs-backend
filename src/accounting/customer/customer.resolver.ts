@@ -4,6 +4,8 @@ import { Customer } from './customer.entity';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { CustomerIdInput } from './dto/customer-id.input';
+import { GraphQLError } from 'graphql';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
