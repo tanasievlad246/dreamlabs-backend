@@ -11,10 +11,10 @@ export interface AccountingService<T> {
   createOne(
     input: CreateCustomerInput | CreateProjectInput | CreateInvoiceInput,
   ): Promise<T>;
-  findOne(id: string): Promise<T>;
-  deleteOne(id: string): Promise<DeleteResult>;
+  findOne(id: string | number): Promise<T>;
+  deleteOne(id: string | number): Promise<DeleteResult>;
   updateOne(
-    id: string,
+    id: string | number,
     input: UpdateCustomerInput | UpdateProjectInput | UpdateInvoiceInput,
   ): Promise<T>;
 }

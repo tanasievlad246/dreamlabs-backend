@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerResolver } from './customer.resolver';
-import { customerServiceMock, loggerMock } from '../mocks';
+import { serviceMock as customerServiceMock, loggerMock } from '../mocks';
 import { CustomerService } from './customer.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { DeleteResult } from 'typeorm';

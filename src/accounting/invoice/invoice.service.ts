@@ -10,14 +10,12 @@ import {
   AssignInvoiceToCustomerInput,
   AssignInvoiceToProjetInput,
 } from './dto/assign-invoice.input';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { AccountingService } from '../types';
 
 @Injectable()
-export class InvoiceService {
+export class InvoiceService implements AccountingService<Invoice> {
   constructor(
     @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly customerService: CustomerService,
     private readonly projectService: ProjectService,
     private readonly dataSource: DataSource,
@@ -80,6 +78,10 @@ export class InvoiceService {
       },
     });
 
+    if (!invoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+
     const newInvoice = this.invoiceRepo.merge(invoice, upadtedInvoice);
 
     return await this.invoiceRepo.save(newInvoice);
@@ -93,7 +95,6 @@ export class InvoiceService {
     });
 
     if (!invoice) {
-      this.logger.error({ id, message: 'Invoice not found' });
       throw new NotFoundException('Invoice not found');
     }
     return invoice;
@@ -115,10 +116,15 @@ export class InvoiceService {
     let stornoInvoie: Invoice;
     await this.dataSource.transaction(async (manager) => {
       const invRepo = manager.getRepository(Invoice);
+
       const invoice = await invRepo.findOne({
         where: { id },
         relations: ['project', 'customer'],
       });
+
+      if (!invoice) {
+        throw new NotFoundException('Invoice not found');
+      }
 
       const storno = invRepo.create({
         description: invoice.description,

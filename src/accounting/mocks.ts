@@ -1,10 +1,33 @@
-export const EXAMPLE_CUSTOMER = {
+import { Customer } from "./customer/customer.entity";
+import { Invoice } from "./invoice/invoice.entity";
+import { Project } from "./project/project.entity";
+
+export const EXAMPLE_CUSTOMER: Customer = {
   id: '1',
   name: 'John Doe',
-  invoices: [], // Assuming invoices is an array of invoice entities
+  invoices: [],
+};
+
+export const EXAMPLE_INVOICE: Invoice = {
+  id: 1,
+  amount: 100,
+  customer: null,
+  project: null,
+  storno: null,
+  description: 'Test Invoice',
+  currency: "USD",
+  paymentTerm: undefined,
+  isPaid: false
+};
+
+export const EXAMPLE_PROJECT: Project = {
+  id: '1',
+  name: 'Test Project',
+  invoices: [],
 };
 
 export const mockRepository = jest.fn(() => ({
+  create: jest.fn().mockImplementation((customer) => customer),
   save: jest
     .fn()
     .mockImplementation((customer) =>
@@ -24,28 +47,50 @@ export const mockRepository = jest.fn(() => ({
   }),
 }));
 
-// export const customerServiceMock = jest.fn(() => ({
-//   findAll: jest.fn().mockResolvedValue([EXAMPLE_CUSTOMER]),
-//   findOne: jest.fn().mockResolvedValue(EXAMPLE_CUSTOMER),
-//   createOne: jest
-//     .fn()
-//     .mockImplementation((customer) =>
-//       Promise.resolve({ ...EXAMPLE_CUSTOMER, ...customer }),
-//     ),
-//   updateOne: jest
-//     .fn()
-//     .mockImplementation((id, updatedCustomer) =>
-//       Promise.resolve({ ...EXAMPLE_CUSTOMER, ...updatedCustomer }),
-//     ),
-//   deleteOne: jest.fn().mockResolvedValue({ affected: 1 }),
-// }));
+export const mockInvoiceRepository = jest.fn(() => ({
+  create: jest.fn().mockImplementation((invoice) => invoice),
+  save: jest
+    .fn()
+    .mockImplementation((invoice) =>
+      Promise.resolve({ ...EXAMPLE_INVOICE, ...invoice }),
+    ),
+  find: jest.fn().mockResolvedValue([EXAMPLE_INVOICE]),
+  findOne: jest.fn().mockImplementation(({ where: { id } }) => {
+    if (id === EXAMPLE_INVOICE.id) {
+      return Promise.resolve(EXAMPLE_INVOICE);
+    } else {
+      return Promise.resolve(null);
+    }
+  }),
+  delete: jest.fn().mockResolvedValue({ affected: 1 }),
+  merge: jest.fn().mockImplementation((currentInvoice, updatedInvoice) => {
+    return { ...currentInvoice, ...updatedInvoice };
+  }),
+}));
 
-export const customerServiceMock = {
+const mockManager = {
+  getRepository: jest.fn().mockImplementation(() => mockInvoiceRepository()),
+};
+
+export const mockDataSource = {
+  transaction: jest.fn().mockImplementation((operation) => operation(mockManager)),
+};
+
+export const serviceMock = {
   findAll: jest.fn(),
   findOne: jest.fn(),
   createOne: jest.fn(),
   updateOne: jest.fn(),
-  deleteOne: jest.fn().mockRejectedValue({ affected: 1 }),
+  deleteOne: jest.fn(),
+};
+
+export const invoiceServiceMock = {
+  ...serviceMock,
+  assignInvoiceToCustomer: jest.fn(),
+  assignInvoiceToProject: jest.fn(),
+  generateStornoInvoice: jest.fn(),
+  markInvociePaid: jest.fn(),
+  markInvoiceUnpaid: jest.fn(),
 };
 
 export const loggerMock = {

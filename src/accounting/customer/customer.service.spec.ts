@@ -4,7 +4,7 @@ import { Customer } from './customer.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { EXAMPLE_CUSTOMER, mockRepository } from '../mocks';
+import { mockRepository } from '../mocks';
 
 describe('CustomerService', () => {
   let service: CustomerService;
