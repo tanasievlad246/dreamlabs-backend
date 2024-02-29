@@ -1,0 +1,35 @@
+apiVersion: skaffold/v2beta21
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - infra/k8s/*
+build:
+  local:
+    push: false
+    useBuildkit: true
+  artifacts:
+    - image: vlad246/dreamlabs-backend
+      context: backend
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.{ts,js}"
+            dest: .
+profiles:
+  - name: dev
+    deploy:
+      kubectl:
+        manifests:
+          - infra/k8s-dev/*
+    build:
+      artifacts:
+        - image: vlad246/dreamlabs-backend
+          context: backend
+          docker:
+            dockerfile: Dockerfile.dev
+          sync:
+            manual:
+              - src: "src/**/*.{ts,js}"
+                dest: .

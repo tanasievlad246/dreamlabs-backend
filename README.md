@@ -1,6 +1,7 @@
 # Description
 
-[Nest](https://github.com/tanasievlad246/dreamlabs-backend) A tech challange API with GraphQL Standard.
+[Nest](https://github.com/tanasievlad246/dreamlabs-backend)
+A tech challange API with GraphQL Standard.
 
 # Running the app
 
@@ -42,5 +43,115 @@
   * If in docker http://localhost:3000/graphql
   * If in minikube run `minikube ip` and then go to `http://<ip>/graphql`
 
+## Example queries
+```
+mutation {
+  createCustomer(createCustomerInput: {
+    name: "Test customer"
+  }) {
+    name
+    id
+  }
+	createOneProject(createProjectInput: {
+    name: "Test project"
+  }) {
+    name
+    id
+  }
+}
+
+mutation {
+    createInvoice(createInvoiceInput: {
+    description: "test"
+    amount: 123.44
+    currency: USD
+    paymentDate: "2024-06-24"
+  }) {
+  	description
+    amount
+    currency
+    customer {
+      name
+    }
+    project {
+      name
+    }
+  }
+}
+
+query {
+  findAllInvoices {
+    id
+    description
+  	amount
+    isPaid
+    storno {
+      id
+      amount
+    }
+    project {
+      name
+    }
+    customer {
+      name
+    }
+  }
+}
+
+mutation {
+  generateOneStornoInvoice(generateInvoiceStornoInput: {
+    id: 1337
+  }) {
+    id
+    storno {
+      id
+      amount
+    }
+    amount
+  }
+}
+
+mutation {
+  markOneInvoiceAsPaid(markInvoicePaidInput: {
+    id: 1337
+  }) {
+    id
+    isPaid
+  }
+  markOneInvoiceAsUnpaid(markInvoicePaidInput: {
+    id: 1337
+  }) {
+    id
+    isPaid
+  }
+}
+
+query {
+  findOneCustomer(findOneCustomerInput: {
+    id: "1e026c8a-fa0f-46fb-8e34-f08ec42d4453"
+  }) {
+    name
+    id
+  }
+}
+
+mutation {
+  deleteOneCustomer(deleteOneCustomerInput: {
+    id: "test"
+  })
+}
+
+query {
+  findAllCustomers {
+    name,
+    invoices {
+      id
+      amount
+    }
+  }
+}
+```
+
 ## Unit Testing
-`npm run test` in the root folder
+* `npm install` in the backend folder
+* `npm run test` in the backend folder

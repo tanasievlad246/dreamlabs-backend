@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dreamlabs-backend-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dreamlabs-backend
+  template:
+    metadata:
+      labels:
+        app: dreamlabs-backend
+    spec:
+      containers:
+        - name: dreamlabs-backend
+          image: vlad246/dreamlabs-backend:latest
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_HOST
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_PASS
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_NAME
+          volumeMounts:
+            - name: dreamlabs-db-volume
+              mountPath: /app/uploads
+      volumes:
+        - name: dreamlabs-db-volume
+          hostPath:
+            path: /data/uploads
+            type: DirectoryOrCreate
+      initContainers:
+        - name: wait-for-db
+          image: postgres:latest # Using the PostgreSQL image
+          command:
+            [
+              "sh",
+              "-c",
+              "until pg_isready -h accounting-db-srv -p 5432; do echo waiting for database; sleep 5; done;",
+            ]
