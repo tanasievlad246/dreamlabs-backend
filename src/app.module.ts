@@ -9,6 +9,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule, utilities } from 'nest-winston';
 import * as winston from 'winston';
+import { Logger } from 'winston';
+import { APP_FILTER } from '@nestjs/core';
+import { GraphqlExceptionFilter } from './common/filters/gql-exception.filter';
 
 @Module({
   imports: [
@@ -38,7 +41,7 @@ import * as winston from 'winston';
       formatError: (err) => {
         return {
           message: err.message,
-          status: err.extensions.status,
+          status: err.extensions.status || 500,
           path: err.path,
           originalError: err.extensions.originalError,
         };
@@ -56,6 +59,12 @@ import * as winston from 'winston';
     AccountingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: GraphqlExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}

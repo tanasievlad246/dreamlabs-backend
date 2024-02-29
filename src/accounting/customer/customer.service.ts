@@ -3,51 +3,130 @@ import { Customer } from './customer.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
 
 export class CustomerService {
   constructor(
-    @InjectRepository(Customer) private customerRepo: Repository<Customer>,
+    @InjectRepository(Customer)
+    private readonly customerRepo: Repository<Customer>,
   ) {}
 
   async createOne(customer: CreateCustomerInput): Promise<Customer> {
-    return await this.customerRepo.save(customer);
+    try {
+      return await this.customerRepo.save(customer);
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: error.message,
+          stack: error.stack,
+          arguments,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findAll(): Promise<Customer[]> {
-    return await this.customerRepo.find();
+    try {
+      return await this.customerRepo.find();
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: error.message,
+          stack: error.stack,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findOne(id: string): Promise<Customer> {
-    const customer = await this.customerRepo.findOne({
-      where: {
-        id,
-      },
-    });
+    try {
+      const customer = await this.customerRepo.findOne({
+        where: {
+          id,
+        },
+      });
 
-    if (!customer) {
-      throw new NotFoundException('Customer not found');
+      if (!customer) {
+        throw new NotFoundException('Customer not found', {
+          description: 'Customer not found',
+          cause: {
+            arguments,
+          },
+        });
+      }
+
+      return customer;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new HttpException(
+          {
+            message: error.message,
+            stack: error.stack,
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
-
-    return customer;
   }
 
   async deleteOne(id: string): Promise<DeleteResult> {
-    return await this.customerRepo.delete({
-      id,
-    });
+    try {
+      return await this.customerRepo.delete({
+        id,
+      });
+    } catch (error) {
+      throw new HttpException(
+        {
+          stack: error.stack,
+          message: error.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async update(
     id: string,
     updatedCustomer: UpdateCustomerInput,
   ): Promise<Customer> {
-    const currentCustomer = await this.findOne(id);
+    try {
+      const currentCustomer = await this.findOne(id);
 
-    const _updatedCustomer = this.customerRepo.merge(
-      currentCustomer,
-      updatedCustomer,
-    );
-    return _updatedCustomer;
+      if (!currentCustomer) {
+        throw new NotFoundException('Customer not found', {
+          description: 'Customer not found',
+          cause: {
+            arguments,
+          },
+        });
+      }
+
+      const _updatedCustomer = this.customerRepo.merge(
+        currentCustomer,
+        updatedCustomer,
+      );
+      return _updatedCustomer;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new HttpException(
+          {
+            message: error.message,
+            stack: error.stack,
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
   }
 }
