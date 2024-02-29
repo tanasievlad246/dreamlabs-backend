@@ -53,6 +53,7 @@ export class CustomerService {
         where: {
           id,
         },
+        relations: ['invoices']
       });
 
       if (!customer) {
