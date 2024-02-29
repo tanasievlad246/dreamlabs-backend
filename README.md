@@ -43,14 +43,4 @@
   * If in minikube run `minikube ip` and then go to `http://<ip>/graphql`
 
 ## Unit Testing
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
+`npm run test` in the root folder
