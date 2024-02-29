@@ -70,7 +70,6 @@ describe('CustomerService', () => {
       mockCustomerRepository().merge.mockReturnValue(expectedUpdatedCustomer);
 
       const result = await service.updateOne('1', update as UpdateCustomerInput);
-      console.log(result);
       expect(result).toEqual(expectedUpdatedCustomer);
     });
 

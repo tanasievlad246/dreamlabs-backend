@@ -23,6 +23,7 @@ A tech challange API with GraphQL Standard.
 4. Go to `localhost:3000/graphql`
 
 ## Kubernetes (Locally)
+
 1. Make sure docker is installed
 2. Install [minikube](https://minikube.sigs.k8s.io/docs/start/)
 3. Enable minikube [ingress addon](https://minikube.sigs.k8s.io/docs/start/)
