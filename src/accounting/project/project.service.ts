@@ -3,7 +3,12 @@ import { Project } from './project.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
-import { Inject, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 
@@ -18,7 +23,9 @@ export class ProjectService {
   }
 
   async findAll(): Promise<Project[]> {
-    return await this.projectRepository.find();
+    return await this.projectRepository.find({
+      relations: ['invoices'],
+    });
   }
 
   async findOne(id: string): Promise<Project> {
@@ -29,7 +36,6 @@ export class ProjectService {
     });
 
     if (!project) {
-      this.logger.error({ id, message: 'Invalid project id input on find project' });
       throw new NotFoundException('Project not found');
     }
 
@@ -43,7 +49,6 @@ export class ProjectService {
     const currentProject = await this.findOne(id);
 
     if (!currentProject) {
-      this.logger.error({ id, message: 'Invalid project id input on update project' });
       throw new NotFoundException('Project not found');
     }
 

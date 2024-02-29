@@ -17,12 +17,7 @@ export class CustomerResolver {
 
   @Query(() => [Customer])
   async findAllCustomers(): Promise<Customer[]> {
-    try {
-      return await this.customerService.findAll();
-    } catch (error) {
-      this.logger.error(error);
-      return [];
-    }
+    return await this.customerService.findAll();
   }
 
   @Query(() => Customer)
