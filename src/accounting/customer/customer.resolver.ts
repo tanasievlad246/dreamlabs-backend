@@ -4,16 +4,25 @@ import { Customer } from './customer.entity';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { CustomerIdInput } from './dto/customer-id.input';
-import { GraphQLError } from 'graphql';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(
+    private readonly customerService: CustomerService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {}
 
   @Query(() => [Customer])
   async findAllCustomers(): Promise<Customer[]> {
-    return await this.customerService.findAll();
+    try {
+      return await this.customerService.findAll();
+    } catch (error) {
+      this.logger.error(error);
+      return [];
+    }
   }
 
   @Query(() => Customer)

@@ -18,17 +18,15 @@ export class LoggingInterceptor implements NestInterceptor {
   ) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const ctx: GqlExecutionContext = GqlExecutionContext.create(context);
-    const now = Date.now();
     const { req } = ctx.getContext();
-
     const operation = req.body.query;
 
-    return next
-      .handle()
-      .pipe(
-        tap(() =>
-          this.logger.info(operation)
-        ),
-      );
+    this.logger.log('http', `[${req.method}] [${req.url}]`, {
+      params: req.params,
+      query: req.query,
+      operation,
+    });
+
+    return next.handle().pipe(tap());
   }
 }

@@ -25,6 +25,7 @@ import * as winston from 'winston';
         new winston.transports.File({ filename: 'error.log', level: 'error' }),
         new winston.transports.File({ filename: 'warn.log', level: 'warning' }),
         new winston.transports.File({ filename: 'info.log', level: 'info' }),
+        new winston.transports.File({ filename: 'http.log', level: 'http' }),
       ],
     }),
     ConfigModule.forRoot({

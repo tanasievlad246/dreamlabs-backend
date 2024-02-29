@@ -3,14 +3,11 @@ import { Customer } from './customer.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { Inject, NotFoundException } from '@nestjs/common';
-import { Logger } from 'winston';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { NotFoundException } from '@nestjs/common';
 
 export class CustomerService {
   constructor(
     @InjectRepository(Customer) private customerRepo: Repository<Customer>,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async createOne(customer: CreateCustomerInput): Promise<Customer> {
@@ -29,7 +26,6 @@ export class CustomerService {
     });
 
     if (!customer) {
-      this.logger.error({ id, message: 'Customer not found' });
       throw new NotFoundException('Customer not found');
     }
 

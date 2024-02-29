@@ -9,7 +9,7 @@ import { ProjectService } from './project/project.service';
 import { ProjectResolver } from './project/project.resolver';
 import { CustomerService } from './customer/customer.service';
 import { CustomerResolver } from './customer/customer.resolver';
-import { LoggingInterceptor } from '@/common/interceptors/loggingInterceptor';
+import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
