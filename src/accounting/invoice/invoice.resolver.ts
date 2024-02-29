@@ -32,7 +32,9 @@ export class InvoiceResolver {
   async deleteOneInvoice(
     @Args('deleteOneInvoiceInput') updatedInvoice: UpdateInvoiceInput,
   ): Promise<boolean> {
-    if (await this.invoiceService.deleteOne(updatedInvoice.id)) {
+    const result = await this.invoiceService.deleteOne(updatedInvoice.id);
+
+    if (result.affected > 0) {
       return true;
     }
     return false;

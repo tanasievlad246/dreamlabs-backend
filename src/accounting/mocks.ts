@@ -1,6 +1,6 @@
-import { Customer } from "./customer/customer.entity";
-import { Invoice } from "./invoice/invoice.entity";
-import { Project } from "./project/project.entity";
+import { Customer } from './customer/customer.entity';
+import { Invoice } from './invoice/invoice.entity';
+import { Project } from './project/project.entity';
 
 export const EXAMPLE_CUSTOMER: Customer = {
   id: '1',
@@ -15,9 +15,9 @@ export const EXAMPLE_INVOICE: Invoice = {
   project: null,
   storno: null,
   description: 'Test Invoice',
-  currency: "USD",
+  currency: 'USD',
   paymentTerm: undefined,
-  isPaid: false
+  isPaid: false,
 };
 
 export const EXAMPLE_PROJECT: Project = {
@@ -26,7 +26,7 @@ export const EXAMPLE_PROJECT: Project = {
   invoices: [],
 };
 
-export const mockRepository = jest.fn(() => ({
+export const mockCustomerRepository = jest.fn(() => ({
   create: jest.fn().mockImplementation((customer) => customer),
   save: jest
     .fn()
@@ -68,12 +68,35 @@ export const mockInvoiceRepository = jest.fn(() => ({
   }),
 }));
 
+export const mockProjectRepository = jest.fn(() => ({
+  create: jest.fn().mockImplementation((project) => project),
+  save: jest
+    .fn()
+    .mockImplementation((project) =>
+      Promise.resolve({ ...EXAMPLE_PROJECT, ...project }),
+    ),
+  find: jest.fn().mockResolvedValue([EXAMPLE_PROJECT]),
+  findOne: jest.fn().mockImplementation(({ where: { id } }) => {
+    if (id === EXAMPLE_PROJECT.id) {
+      return Promise.resolve(EXAMPLE_PROJECT);
+    } else {
+      return Promise.resolve(null);
+    }
+  }),
+  delete: jest.fn().mockResolvedValue({ affected: 1 }),
+  merge: jest.fn().mockImplementation((currentProject, updatedProject) => {
+    return { ...currentProject, ...updatedProject };
+  }),
+}));
+
 const mockManager = {
   getRepository: jest.fn().mockImplementation(() => mockInvoiceRepository()),
 };
 
 export const mockDataSource = {
-  transaction: jest.fn().mockImplementation((operation) => operation(mockManager)),
+  transaction: jest
+    .fn()
+    .mockImplementation((operation) => operation(mockManager)),
 };
 
 export const serviceMock = {

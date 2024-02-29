@@ -32,9 +32,22 @@ export class ProjectResolver {
   async updateOneProject(
     @Args('updateOneProjectInput') updateOneProjectInput: UpdateProjectInput,
   ): Promise<Project> {
-    return await this.projectService.update(
+    return await this.projectService.updateOne(
       updateOneProjectInput.id,
       updateOneProjectInput,
     );
+  }
+
+  @Mutation(() => Boolean)
+  async deleteOneProject(
+    @Args('deleteOneProjectInput') deleteOneProjectInput: ProjectIdInput,
+  ): Promise<boolean> {
+    if (
+      (await this.projectService.deleteOne(deleteOneProjectInput.id)).affected >
+      0
+    ) {
+      return true;
+    }
+    return false;
   }
 }

@@ -3,19 +3,12 @@ import { Project } from './project.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  NotFoundException,
-} from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { NotFoundException } from '@nestjs/common';
+import { AccountingService } from '../types';
 
-export class ProjectService {
+export class ProjectService implements AccountingService<Project> {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async createOne(project: CreateProjectInput): Promise<Project> {
@@ -42,7 +35,7 @@ export class ProjectService {
     return project;
   }
 
-  async update(
+  async updateOne(
     id: string,
     updatedProject: UpdateProjectInput,
   ): Promise<Project> {
@@ -60,7 +53,7 @@ export class ProjectService {
     return await this.projectRepository.save(_updatedProject);
   }
 
-  async delete(id: string): Promise<DeleteResult> {
+  async deleteOne(id: string): Promise<DeleteResult> {
     return await this.projectRepository.delete({
       id,
     });

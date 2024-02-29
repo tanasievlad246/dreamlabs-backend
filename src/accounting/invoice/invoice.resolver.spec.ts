@@ -83,7 +83,7 @@ describe('InvoiceResolver', () => {
 
   it('should delete an invoice', async () => {
     jest.spyOn(invoiceServiceMock, 'deleteOne').mockImplementation(async () => true);
-
+    console.log(await resolver.deleteOneInvoice({ id: 1 }))
     expect(await resolver.deleteOneInvoice({ id: 1 })).toBe(true);
   });
 

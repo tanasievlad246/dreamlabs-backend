@@ -4,7 +4,7 @@ import { Customer } from './customer.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { mockRepository } from '../mocks';
+import { mockCustomerRepository } from '../mocks';
 
 describe('CustomerService', () => {
   let service: CustomerService;
@@ -15,7 +15,7 @@ describe('CustomerService', () => {
         CustomerService,
         {
           provide: getRepositoryToken(Customer),
-          useFactory: mockRepository,
+          useFactory: mockCustomerRepository,
         },
       ],
     }).compile();
@@ -46,7 +46,7 @@ describe('CustomerService', () => {
     });
 
     it('should throw NotFoundException if customer is not found', async () => {
-      mockRepository().findOne.mockResolvedValue(null);
+      mockCustomerRepository().findOne.mockResolvedValue(null);
 
       await expect(service.findOne('non-existing')).rejects.toThrow(
         NotFoundException,
@@ -66,8 +66,8 @@ describe('CustomerService', () => {
       const initialCustomer = { id: '1', name: 'John Doe', invoices: [] };
       const update = { name: 'Jane Doe' };
       const expectedUpdatedCustomer = { ...initialCustomer, ...update };
-      mockRepository().findOne.mockResolvedValue(initialCustomer);
-      mockRepository().merge.mockReturnValue(expectedUpdatedCustomer);
+      mockCustomerRepository().findOne.mockResolvedValue(initialCustomer);
+      mockCustomerRepository().merge.mockReturnValue(expectedUpdatedCustomer);
 
       const result = await service.updateOne('1', update as UpdateCustomerInput);
       console.log(result);
@@ -75,7 +75,7 @@ describe('CustomerService', () => {
     });
 
     it('should throw NotFoundException if customer to update is not found', async () => {
-      mockRepository().findOne.mockResolvedValue(null);
+      mockCustomerRepository().findOne.mockResolvedValue(null);
 
       await expect(service.updateOne('non-existing', {} as UpdateCustomerInput)).rejects.toThrow(
         NotFoundException,

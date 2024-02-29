@@ -71,6 +71,7 @@ type Mutation {
   generateOneStornoInvoice(generateInvoiceStornoInput: InvoiceIdInput!): Invoice!
   createOneProject(createProjectInput: CreateProjectInput!): Project!
   updateOneProject(updateOneProjectInput: UpdateProjectInput!): Project!
+  deleteOneProject(deleteOneProjectInput: ProjectIdInput!): Boolean!
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
   deleteOneCustomer(deleteOneCustomerInput: UpdateCustomerInput!): Boolean!
