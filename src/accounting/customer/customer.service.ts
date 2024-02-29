@@ -33,7 +33,9 @@ export class CustomerService {
 
   async findAll(): Promise<Customer[]> {
     try {
-      return await this.customerRepo.find();
+      return await this.customerRepo.find({
+        relations: ['invoices']
+      });
     } catch (error) {
       throw new HttpException(
         {
