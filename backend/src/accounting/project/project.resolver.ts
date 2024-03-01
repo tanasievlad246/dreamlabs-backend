@@ -4,9 +4,10 @@ import { Project } from './project.entity';
 import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { ProjectIdInput } from './dto/project-id.input';
+import { IProjectResolver } from './project-resolver.interface';
 
 @Resolver(() => Project)
-export class ProjectResolver {
+export class ProjectResolver implements IProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
 
   @Query(() => [Project])

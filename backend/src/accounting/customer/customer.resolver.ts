@@ -7,9 +7,10 @@ import { CustomerIdInput } from './dto/customer-id.input';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+import { ICustomerResolver } from './customer-resolver.interface';
 
 @Resolver(() => Customer)
-export class CustomerResolver {
+export class CustomerResolver implements ICustomerResolver {
   constructor(
     private readonly customerService: CustomerService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
@@ -22,20 +23,20 @@ export class CustomerResolver {
 
   @Query(() => Customer)
   async findOneCustomer(
-    @Args('findOneCustomerInput') findOneCustomerInput: CustomerIdInput,
+    @Args('findOneCustomerInput') customerIdInput: CustomerIdInput,
   ): Promise<Customer> {
-    return await this.customerService.findOne(findOneCustomerInput.id);
+    return await this.customerService.findOne(customerIdInput.id);
   }
 
   @Mutation(() => Customer)
-  async createCustomer(
+  async createOneCustomer(
     @Args('createCustomerInput') createCustomerInput: CreateCustomerInput,
   ): Promise<Customer> {
     return await this.customerService.createOne(createCustomerInput);
   }
 
   @Mutation(() => Customer)
-  async updateCustomer(
+  async updateOneCustomer(
     @Args('updateCustomerInput') updateCustomerInput: UpdateCustomerInput,
   ): Promise<Customer> {
     return await this.customerService.updateOne(
@@ -46,9 +47,9 @@ export class CustomerResolver {
 
   @Mutation(() => Boolean)
   async deleteOneCustomer(
-    @Args('deleteOneCustomerInput') deleteOneCustomer: UpdateCustomerInput,
+    @Args('deleteOneCustomerInput') customerIdInput: CustomerIdInput,
   ): Promise<boolean> {
-    const result = await this.customerService.deleteOne(deleteOneCustomer.id);
+    const result = await this.customerService.deleteOne(customerIdInput.id);
 
     if (result.affected > 0) {
       return true;

@@ -30,7 +30,9 @@ describe('InvoiceResolver', () => {
     const result = [
       { id: '1', amount: 100, project: null, customer: null, storno: null },
     ];
-    jest.spyOn(invoiceServiceMock, 'findAll').mockImplementation(async () => result);
+    jest
+      .spyOn(invoiceServiceMock, 'findAll')
+      .mockImplementation(async () => result);
 
     expect(await resolver.findAllInvoices()).toBe(result);
   });
@@ -43,7 +45,9 @@ describe('InvoiceResolver', () => {
       customer: null,
       storno: null,
     };
-    jest.spyOn(invoiceServiceMock, 'findOne').mockImplementation(async () => result);
+    jest
+      .spyOn(invoiceServiceMock, 'findOne')
+      .mockImplementation(async () => result);
 
     expect(await resolver.findOneInvoice({ id: 1 })).toBe(result);
   });
@@ -56,10 +60,12 @@ describe('InvoiceResolver', () => {
       customer: null,
       storno: null,
     };
-    jest.spyOn(invoiceServiceMock, 'createOne').mockImplementation(async () => result);
+    jest
+      .spyOn(invoiceServiceMock, 'createOne')
+      .mockImplementation(async () => result);
 
     expect(
-      await resolver.createInvoice({ amount: 100 } as CreateInvoiceInput),
+      await resolver.createOneInvoice({ amount: 100 } as CreateInvoiceInput),
     ).toBe(result);
   });
 
@@ -71,7 +77,9 @@ describe('InvoiceResolver', () => {
       customer: null,
       storno: null,
     };
-    jest.spyOn(invoiceServiceMock, 'updateOne').mockImplementation(async () => result);
+    jest
+      .spyOn(invoiceServiceMock, 'updateOne')
+      .mockImplementation(async () => result);
 
     expect(
       await resolver.updateOneInvoice({
@@ -82,7 +90,9 @@ describe('InvoiceResolver', () => {
   });
 
   it('should delete an invoice', async () => {
-    jest.spyOn(invoiceServiceMock, 'deleteOne').mockImplementation(async () => true);
+    jest
+      .spyOn(invoiceServiceMock, 'deleteOne')
+      .mockImplementation(async () => true);
     expect(await resolver.deleteOneInvoice({ id: 1 })).toBe(true);
   });
 
