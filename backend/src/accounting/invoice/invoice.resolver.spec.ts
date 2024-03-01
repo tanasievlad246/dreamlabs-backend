@@ -4,6 +4,7 @@ import { InvoiceService } from './invoice.service';
 import { invoiceServiceMock } from '../mocks';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
+import { DeleteResult } from 'typeorm';
 
 describe('InvoiceResolver', () => {
   let resolver: InvoiceResolver;
@@ -92,7 +93,7 @@ describe('InvoiceResolver', () => {
   it('should delete an invoice', async () => {
     jest
       .spyOn(invoiceServiceMock, 'deleteOne')
-      .mockImplementation(async () => true);
+      .mockImplementation(async () => ({ affected: 1 }) as DeleteResult);
     expect(await resolver.deleteOneInvoice({ id: 1 })).toBe(true);
   });
 

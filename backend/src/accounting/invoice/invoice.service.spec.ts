@@ -14,7 +14,6 @@ describe('InvoiceService', () => {
   let service: InvoiceService;
   let customerService: CustomerService;
   let projectService: ProjectService;
-  let dataSource: DataSource;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -33,7 +32,6 @@ describe('InvoiceService', () => {
     service = module.get<InvoiceService>(InvoiceService);
     customerService = module.get<CustomerService>(CustomerService);
     projectService = module.get<ProjectService>(ProjectService);
-    dataSource = module.get<DataSource>(DataSource);
   });
 
   it('should be defined', () => {

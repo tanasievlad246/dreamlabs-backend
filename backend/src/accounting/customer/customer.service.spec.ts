@@ -69,16 +69,19 @@ describe('CustomerService', () => {
       mockCustomerRepository().findOne.mockResolvedValue(initialCustomer);
       mockCustomerRepository().merge.mockReturnValue(expectedUpdatedCustomer);
 
-      const result = await service.updateOne('1', update as UpdateCustomerInput);
+      const result = await service.updateOne(
+        '1',
+        update as UpdateCustomerInput,
+      );
       expect(result).toEqual(expectedUpdatedCustomer);
     });
 
     it('should throw NotFoundException if customer to update is not found', async () => {
       mockCustomerRepository().findOne.mockResolvedValue(null);
 
-      await expect(service.updateOne('non-existing', {} as UpdateCustomerInput)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updateOne('non-existing', {} as UpdateCustomerInput),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

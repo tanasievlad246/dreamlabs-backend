@@ -50,7 +50,7 @@ describe('CustomerResolver', () => {
       .spyOn(customerService, 'createOne')
       .mockImplementation(async () => result);
 
-    expect(await resolver.createCustomer({ name: 'Test Customer' })).toBe(
+    expect(await resolver.createOneCustomer({ name: 'Test Customer' })).toBe(
       result,
     );
   });
@@ -62,7 +62,7 @@ describe('CustomerResolver', () => {
       .mockImplementation(async () => result);
 
     expect(
-      await resolver.updateCustomer({ id: '1', name: 'Test Customer' }),
+      await resolver.updateOneCustomer({ id: '1', name: 'Test Customer' }),
     ).toBe(result);
   });
 
@@ -89,7 +89,7 @@ describe('CustomerResolver', () => {
       .mockImplementation(async () => result);
 
     expect(
-      await resolver.updateCustomer({ id: '1', name: 'Test Customer' }),
+      await resolver.updateOneCustomer({ id: '1', name: 'Test Customer' }),
     ).toBe(result);
   });
 });

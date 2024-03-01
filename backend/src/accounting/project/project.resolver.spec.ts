@@ -1,8 +1,8 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { ProjectResolver } from "./project.resolver";
-import { ProjectService } from "./project.service";
-import { serviceMock } from "../mocks";
-import { DeleteResult } from "typeorm";
+import { Test, TestingModule } from '@nestjs/testing';
+import { ProjectResolver } from './project.resolver';
+import { ProjectService } from './project.service';
+import { serviceMock } from '../mocks';
+import { DeleteResult } from 'typeorm';
 
 describe('ProjectResolver', () => {
   let resolver: ProjectResolver;
