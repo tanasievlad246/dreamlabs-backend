@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InvoiceResolver } from './invoice.resolver';
-import { InvoiceService } from './invoice.service';
+import { InvoiceServiceImpl } from './invoice.service';
 import { invoiceServiceMock } from '../mocks';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
@@ -14,7 +14,7 @@ describe('InvoiceResolver', () => {
       providers: [
         InvoiceResolver,
         {
-          provide: InvoiceService,
+          provide: InvoiceServiceImpl,
           useValue: invoiceServiceMock,
         },
       ],
@@ -106,7 +106,7 @@ describe('InvoiceResolver', () => {
       storno: null,
     };
     jest
-      .spyOn(invoiceServiceMock, 'markInvociePaid')
+      .spyOn(invoiceServiceMock, 'markInvoiceAsPaid')
       .mockImplementation(async () => result);
 
     expect(await resolver.markOneInvoiceAsPaid({ id: 1 })).toBe(result);
@@ -121,7 +121,7 @@ describe('InvoiceResolver', () => {
       storno: null,
     };
     jest
-      .spyOn(invoiceServiceMock, 'markInvoiceUnpaid')
+      .spyOn(invoiceServiceMock, 'markInvoiceAsUnpaid')
       .mockImplementation(async () => result);
 
     expect(await resolver.markOneInvoiceAsUnpaid({ id: 1 })).toBe(result);

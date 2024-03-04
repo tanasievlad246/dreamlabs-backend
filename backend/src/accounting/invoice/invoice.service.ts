@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { CustomerService } from '../customer/customer.service';
@@ -10,10 +10,10 @@ import {
   AssignInvoiceToCustomerInput,
   AssignInvoiceToProjetInput,
 } from './dto/assign-invoice.input';
-import { AccountingService } from '../types';
+import { InvoiceService } from '../types';
 
 @Injectable()
-export class InvoiceService implements AccountingService<Invoice> {
+export class InvoiceServiceImpl implements InvoiceService {
   constructor(
     @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
     private readonly customerService: CustomerService,
@@ -100,13 +100,13 @@ export class InvoiceService implements AccountingService<Invoice> {
     return invoice;
   }
 
-  async markInvociePaid(id: number): Promise<Invoice> {
+  async markInvoiceAsPaid(id: number): Promise<Invoice> {
     const invoice = await this.findOne(id);
     invoice.isPaid = true;
     return await this.invoiceRepo.save(invoice);
   }
 
-  async markInvoiceUnpaid(id: number): Promise<Invoice> {
+  async markInvoiceAsUnpaid(id: number): Promise<Invoice> {
     const invoice = await this.findOne(id);
     invoice.isPaid = false;
     return await this.invoiceRepo.save(invoice);

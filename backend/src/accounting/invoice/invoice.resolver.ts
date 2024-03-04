@@ -1,6 +1,6 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Invoice } from './invoice.entity';
-import { InvoiceService } from './invoice.service';
+import { InvoiceServiceImpl } from './invoice.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
 import { InvoiceIdInput } from './dto/invoice-id.input';
@@ -8,7 +8,7 @@ import { IInvoiceResolver } from './invoice-resolver.interface';
 
 @Resolver(() => Invoice)
 export class InvoiceResolver implements IInvoiceResolver {
-  constructor(private readonly invoiceService: InvoiceService) {}
+  constructor(private readonly invoiceService: InvoiceServiceImpl) {}
 
   @Query(() => [Invoice])
   async findAllInvoices(): Promise<Invoice[]> {
@@ -55,14 +55,14 @@ export class InvoiceResolver implements IInvoiceResolver {
   async markOneInvoiceAsPaid(
     @Args('markInvoicePaidInput') markInvoicePaidInput: InvoiceIdInput,
   ): Promise<Invoice> {
-    return this.invoiceService.markInvociePaid(markInvoicePaidInput.id);
+    return this.invoiceService.markInvoiceAsPaid(markInvoicePaidInput.id);
   }
 
   @Mutation(() => Invoice)
   async markOneInvoiceAsUnpaid(
     @Args('markInvoicePaidInput') markInvoiceUnpaidInput: InvoiceIdInput,
   ): Promise<Invoice> {
-    return this.invoiceService.markInvoiceUnpaid(markInvoiceUnpaidInput.id);
+    return this.invoiceService.markInvoiceAsUnpaid(markInvoiceUnpaidInput.id);
   }
 
   @Mutation(() => Invoice)

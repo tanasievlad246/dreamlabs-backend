@@ -11,7 +11,7 @@ import {
 import { NotFoundException } from '@nestjs/common';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './project.entity';
-import { InvoiceService } from '../invoice/invoice.service';
+import { InvoiceServiceImpl } from '../invoice/invoice.service';
 import { Invoice } from '../invoice/invoice.entity';
 
 describe('ProjectService', () => {
@@ -22,7 +22,7 @@ describe('ProjectService', () => {
       providers: [
         ProjectService,
         {
-          provide: InvoiceService,
+          provide: InvoiceServiceImpl,
           useValue: invoiceServiceMock,
         },
         {

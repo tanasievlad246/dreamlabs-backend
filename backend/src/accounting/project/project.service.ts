@@ -5,12 +5,12 @@ import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { NotFoundException } from '@nestjs/common';
 import { AccountingService } from '../types';
-import { InvoiceService } from '../invoice/invoice.service';
+import { InvoiceServiceImpl } from '../invoice/invoice.service';
 
 export class ProjectService implements AccountingService<Project> {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
-    private readonly invoiceService: InvoiceService,
+    private readonly invoiceService: InvoiceServiceImpl,
   ) {}
 
   async createOne(project: CreateProjectInput): Promise<Project> {

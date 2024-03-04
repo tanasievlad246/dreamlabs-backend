@@ -113,8 +113,8 @@ export const invoiceServiceMock = {
   assignInvoiceToCustomer: jest.fn(),
   assignInvoiceToProject: jest.fn(),
   generateStornoInvoice: jest.fn(),
-  markInvociePaid: jest.fn(),
-  markInvoiceUnpaid: jest.fn(),
+  markInvoiceAsPaid: jest.fn(),
+  markInvoiceAsUnpaid: jest.fn(),
 };
 
 export const loggerMock = {

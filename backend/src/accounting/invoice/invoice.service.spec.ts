@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { InvoiceService } from './invoice.service';
+import { InvoiceServiceImpl } from './invoice.service';
 import { mockDataSource, mockInvoiceRepository, serviceMock } from '../mocks';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Invoice } from './invoice.entity';
@@ -11,14 +11,14 @@ import { UpdateInvoiceInput } from './dto/update-invoice-input';
 import { NotFoundException } from '@nestjs/common';
 
 describe('InvoiceService', () => {
-  let service: InvoiceService;
+  let service: InvoiceServiceImpl;
   let customerService: CustomerService;
   let projectService: ProjectService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        InvoiceService,
+        InvoiceServiceImpl,
         { provide: CustomerService, useValue: serviceMock },
         { provide: ProjectService, useValue: serviceMock },
         { provide: DataSource, useValue: mockDataSource },
@@ -29,7 +29,7 @@ describe('InvoiceService', () => {
       ],
     }).compile();
 
-    service = module.get<InvoiceService>(InvoiceService);
+    service = module.get<InvoiceServiceImpl>(InvoiceServiceImpl);
     customerService = module.get<CustomerService>(CustomerService);
     projectService = module.get<ProjectService>(ProjectService);
   });
@@ -196,7 +196,7 @@ describe('InvoiceService', () => {
         isPaid: true,
       };
 
-      const result = await service.markInvociePaid(1);
+      const result = await service.markInvoiceAsPaid(1);
       expect(result.id).toEqual(expectedInvoice.id);
       expect(result.amount).toEqual(expectedInvoice.amount);
       expect(result.isPaid).toEqual(expectedInvoice.isPaid);
@@ -211,7 +211,7 @@ describe('InvoiceService', () => {
         isPaid: false,
       };
 
-      const result = await service.markInvoiceUnpaid(1);
+      const result = await service.markInvoiceAsUnpaid(1);
       expect(result.id).toEqual(expectedInvoice.id);
       expect(result.amount).toEqual(expectedInvoice.amount);
       expect(result.isPaid).toEqual(expectedInvoice.isPaid);
