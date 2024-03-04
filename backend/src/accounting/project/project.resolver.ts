@@ -5,6 +5,7 @@ import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { ProjectIdInput } from './dto/project-id.input';
 import { IProjectResolver } from './project-resolver.interface';
+import { AddInvoiceToProjectInput } from './dto/project-add-invoice.input';
 
 @Resolver(() => Project)
 export class ProjectResolver implements IProjectResolver {
@@ -50,5 +51,16 @@ export class ProjectResolver implements IProjectResolver {
       return true;
     }
     return false;
+  }
+
+  @Mutation(() => Project)
+  async addInvoiceToProject(
+    @Args('addInvoiceToProjectInput')
+    addInvoiceToProjectInput: AddInvoiceToProjectInput,
+  ) {
+    return await this.projectService.addInvoice(
+      addInvoiceToProjectInput.projectId,
+      addInvoiceToProjectInput.invoiceId,
+    );
   }
 }

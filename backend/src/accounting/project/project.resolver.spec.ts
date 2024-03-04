@@ -90,4 +90,15 @@ describe('ProjectResolver', () => {
       await resolver.updateOneProject({ id: '1', name: 'Test Project' }),
     ).toBe(result);
   });
+
+  it('should add an invoice to a project', async () => {
+    const result = { id: '1', name: 'Test Project', invoices: [] }; // Mock response
+    jest
+      .spyOn(projectService, 'addInvoice')
+      .mockImplementation(async () => result);
+
+    expect(
+      await resolver.addInvoiceToProject({ projectId: '1', invoiceId: 1 }),
+    ).toBe(result);
+  });
 });

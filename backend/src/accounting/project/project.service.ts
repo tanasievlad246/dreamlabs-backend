@@ -5,10 +5,12 @@ import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { NotFoundException } from '@nestjs/common';
 import { AccountingService } from '../types';
+import { InvoiceService } from '../invoice/invoice.service';
 
 export class ProjectService implements AccountingService<Project> {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
+    private readonly invoiceService: InvoiceService,
   ) {}
 
   async createOne(project: CreateProjectInput): Promise<Project> {
@@ -57,5 +59,25 @@ export class ProjectService implements AccountingService<Project> {
     return await this.projectRepository.delete({
       id,
     });
+  }
+
+  /**
+   * Write test for this function based on the requirements and conditions
+   */
+  async addInvoice(projectId: string, invoiceId: number): Promise<Project> {
+    const project = await this.findOne(projectId);
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    const invoice = await this.invoiceService.findOne(invoiceId);
+
+    if (!invoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+
+    project.invoices.push(invoice);
+    return await this.projectRepository.save(project);
   }
 }

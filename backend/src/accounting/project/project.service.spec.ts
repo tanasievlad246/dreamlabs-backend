@@ -1,10 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectService } from './project.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { mockProjectRepository } from '../mocks';
+import {
+  EXAMPLE_INVOICE,
+  EXAMPLE_PROJECT,
+  invoiceServiceMock,
+  mockInvoiceRepository,
+  mockProjectRepository,
+} from '../mocks';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './project.entity';
+import { InvoiceService } from '../invoice/invoice.service';
+import { Invoice } from '../invoice/invoice.entity';
 
 describe('ProjectService', () => {
   let service: ProjectService;
@@ -13,6 +21,14 @@ describe('ProjectService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProjectService,
+        {
+          provide: InvoiceService,
+          useValue: invoiceServiceMock,
+        },
+        {
+          provide: getRepositoryToken(Invoice),
+          useFactory: mockInvoiceRepository,
+        },
         {
           provide: getRepositoryToken(Project),
           useFactory: mockProjectRepository,
@@ -80,6 +96,29 @@ describe('ProjectService', () => {
       await expect(
         service.updateOne('non-existing', {} as UpdateProjectInput),
       ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('addInvoiceToProject', () => {
+    it('should add an invoice to a project', async () => {
+      const project = { ...EXAMPLE_PROJECT };
+      const invoice = { ...EXAMPLE_INVOICE };
+      mockProjectRepository().findOne.mockResolvedValue(project);
+      invoiceServiceMock.findOne.mockResolvedValue(invoice);
+
+      mockProjectRepository().save.mockResolvedValue({
+        ...project,
+        invoices: [invoice],
+      });
+
+      const result = await service.addInvoice('1', 1);
+      expect(result.invoices[0].id).toBe(invoice.id);
+    });
+
+    it('should throw error if invoice or project is undefined', () => {
+      invoiceServiceMock.findOne.mockResolvedValue(null);
+
+      expect(service.addInvoice('1', 2)).rejects.toThrow(NotFoundException);
     });
   });
 });

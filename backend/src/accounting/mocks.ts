@@ -105,6 +105,7 @@ export const serviceMock = {
   createOne: jest.fn(),
   updateOne: jest.fn(),
   deleteOne: jest.fn(),
+  addInvoice: jest.fn(),
 };
 
 export const invoiceServiceMock = {
