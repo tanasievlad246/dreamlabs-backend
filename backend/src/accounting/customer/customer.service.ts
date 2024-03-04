@@ -5,11 +5,13 @@ import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
 import { NotFoundException } from '@nestjs/common';
 import { AccountingService } from '../types';
+import { InvoiceServiceImpl } from '../invoice/invoice.service';
 
 export class CustomerService implements AccountingService<Customer> {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepo: Repository<Customer>,
+    private readonly invoiceService: InvoiceServiceImpl,
   ) {}
 
   async createOne(customer: CreateCustomerInput): Promise<Customer> {
@@ -34,7 +36,7 @@ export class CustomerService implements AccountingService<Customer> {
       throw new NotFoundException('Customer not found', {
         description: 'Customer not found',
         cause: {
-          arguments,
+          id,
         },
       });
     }
@@ -58,7 +60,7 @@ export class CustomerService implements AccountingService<Customer> {
       throw new NotFoundException('Customer not found', {
         description: 'Customer not found',
         cause: {
-          arguments,
+          id,
         },
       });
     }
@@ -68,5 +70,22 @@ export class CustomerService implements AccountingService<Customer> {
       updatedCustomer,
     );
     return _updatedCustomer;
+  }
+
+  async addInvoice(projectId: string, invoiceId: number): Promise<Customer> {
+    const customer = await this.findOne(projectId);
+
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    const invoice = await this.invoiceService.findOne(invoiceId);
+
+    if (!invoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+
+    customer.invoices.push(invoice);
+    return this.customerRepo.save(customer);
   }
 }
