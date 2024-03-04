@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, HttpException, HttpStatus, Inject, NotFoundException } from '@nestjs/common';
+import {
+  Catch,
+  HttpException,
+  HttpStatus,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
 import { GqlExceptionFilter } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -10,7 +16,7 @@ export class GraphqlExceptionFilter<T extends Error>
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
-  catch(exception: T, host: ArgumentsHost) {
+  catch(exception: T) {
     if (exception instanceof NotFoundException) {
       throw exception;
     } else {
@@ -24,6 +30,5 @@ export class GraphqlExceptionFilter<T extends Error>
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
   }
 }

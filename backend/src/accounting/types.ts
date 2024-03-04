@@ -22,6 +22,7 @@ export interface AccountingService<T extends Project | Customer> {
     id: string,
     input: UpdateCustomerInput | UpdateProjectInput,
   ): Promise<T>;
+  addInvoice(projectId: string, invoiceId: number): Promise<T>;
 }
 
 export interface InvoiceService {
