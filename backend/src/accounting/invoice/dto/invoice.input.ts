@@ -1,7 +1,6 @@
-import Currency from '@/common/enums/currency.enum';
+import Currency from '../../../common/enums/currency.enum';
 import { Field, Float, InputType } from '@nestjs/graphql';
 import {
-  IsBoolean,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -40,5 +39,5 @@ export class CreateInvoiceInput {
     message: 'date must be in YYYY-MM-DD format',
   })
   @Field(() => String)
-  paymentDate: string;
+  paymentTerm: string;
 }

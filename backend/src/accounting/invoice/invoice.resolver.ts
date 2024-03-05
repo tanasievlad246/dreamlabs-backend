@@ -74,4 +74,11 @@ export class InvoiceResolver implements IInvoiceResolver {
       generateInvoiceStornoInput.id,
     );
   }
+
+  @Mutation(() => Invoice)
+  async createOneInvoiceByCommand(
+    @Args('createInvoiceInput') createInvoiceInput: CreateInvoiceInput,
+  ): Promise<Invoice> {
+    return await this.invoiceService.createInvoiceByCommand(createInvoiceInput);
+  }
 }

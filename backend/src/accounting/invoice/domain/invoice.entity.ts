@@ -1,4 +1,4 @@
-import Currency from '@/common/enums/currency.enum';
+import Currency from '../../../common/enums/currency.enum';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,

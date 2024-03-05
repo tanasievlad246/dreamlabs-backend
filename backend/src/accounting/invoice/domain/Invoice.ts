@@ -1,8 +1,31 @@
 import { Customer } from '@/accounting/customer/customer.entity';
 import { Project } from '@/accounting/project/project.entity';
-import Currency from '@/common/enums/currency.enum';
+import Currency from '../../../common/enums/currency.enum';
 
-export class Invoice {
+import { AggregateRoot } from '@nestjs/cqrs';
+
+export type InvoiceEssentialProps = Readonly<
+  Required<{
+    amount: number;
+    currency: Currency;
+    paymentTerm: Date;
+  }>
+>;
+
+export type InvoiceOptionalProps = Readonly<
+  Partial<{
+    description: string;
+    storno: Invoice;
+    isPaid: boolean;
+    customer: Customer;
+    project: Project;
+  }>
+>;
+
+export type InvoiceProps = InvoiceEssentialProps &
+  Required<InvoiceOptionalProps>;
+
+export class Invoice extends AggregateRoot implements InvoiceProps {
   id: number;
   description: string;
   storno: Invoice;
@@ -13,25 +36,49 @@ export class Invoice {
   customer: Customer;
   project: Project;
 
-  constructor(
-    id: number,
-    description: string,
-    storno: Invoice,
-    amount: number,
-    currency: Currency,
-    paymentTerm: Date,
-    isPaid: boolean,
-    customer: Customer,
-    project: Project,
-  ) {
-    this.id = id;
-    this.description = description;
-    this.storno = storno;
+  constructor(props: InvoiceProps) {
+    super();
+    Object.assign(this, props);
+  }
+
+  markAsPaid(): void {
+    this.isPaid = true;
+  }
+
+  markAsUnpaid(): void {
+    this.isPaid = false;
+  }
+
+  changeAmount(amount: number): void {
     this.amount = amount;
+  }
+
+  changeCurrency(currency: Currency): void {
     this.currency = currency;
+  }
+
+  changeDescription(description: string): void {
+    this.description = description;
+  }
+
+  changePaymentTerm(paymentTerm: Date): void {
     this.paymentTerm = paymentTerm;
-    this.isPaid = isPaid;
+  }
+
+  assignCustomer(customer: Customer): void {
     this.customer = customer;
+  }
+
+  assignProject(project: Project): void {
     this.project = project;
+  }
+
+  cancel(): Invoice {
+    const amount = 0 - this.amount;
+    this.storno = new Invoice({
+      ...this,
+      amount,
+    });
+    return this.storno;
   }
 }
