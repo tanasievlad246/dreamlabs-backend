@@ -2,7 +2,7 @@ version: '3.8'
 services:
   backend:
     build: backend/
-    container_name: backend
+    container_name: dreamlabs-backend
     command: npm run start:dev
     volumes:
       - .:/backend/app
@@ -15,7 +15,7 @@ services:
       - DB_HOST=postgres
       - DB_NAME=accounting
   postgres:
-    container_name: database
+    container_name: dreamlabs-database
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
