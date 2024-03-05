@@ -16,14 +16,11 @@ import {
   AssignInvoiceToProjetInput,
 } from './dto/assign-invoice.input';
 import { InvoiceService } from './invoice-service.interface';
-import { CommandBus } from '@nestjs/cqrs';
-import { CreateInvoiceCommand } from './command/createInvoice.command';
 
 @Injectable()
 export class InvoiceServiceImpl implements InvoiceService {
   constructor(
     @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
-    private readonly commandBus: CommandBus,
     @Inject(forwardRef(() => CustomerService))
     private readonly customerService: CustomerService,
     @Inject(forwardRef(() => ProjectService))
@@ -153,22 +150,5 @@ export class InvoiceServiceImpl implements InvoiceService {
       await invRepo.save(invoice);
     });
     return stornoInvoie;
-  }
-
-  async createInvoiceByCommand(inv: CreateInvoiceInput): Promise<Invoice> {
-    try {
-      return await this.commandBus.execute(
-        new CreateInvoiceCommand(
-          inv.amount,
-          inv.currency,
-          inv.paymentTerm,
-          inv.customerId,
-          inv.projectId,
-          inv.description,
-        ),
-      );
-    } catch (error) {
-      throw error;
-    }
   }
 }

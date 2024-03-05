@@ -14,7 +14,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { InvoiceCreateEventHandler } from './invoice/event/InvoiceCreatedEventHandler';
 import { InvoiceFactory } from './invoice/domain/InvoiceFactory';
-import { CreateInvoiceHandler } from './invoice/command/CreateInvoiceHandler';
+import { CreateInvoiceHandler } from './invoice/command/handlers/CreateInvoiceHandler';
+import { InvoiceCQRSServiceImpl } from './invoice/invoice-cqrs.service';
 
 const EventHandlers = [InvoiceCreateEventHandler];
 const CommandHandlers = [CreateInvoiceHandler];
@@ -32,6 +33,7 @@ const CommandHandlers = [CreateInvoiceHandler];
     ProjectResolver,
     CustomerService,
     CustomerResolver,
+    InvoiceCQRSServiceImpl,
     ...EventHandlers,
     ...CommandHandlers,
     InvoiceFactory,

@@ -5,10 +5,14 @@ import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
 import { InvoiceIdInput } from './dto/invoice-id.input';
 import { IInvoiceResolver } from './invoice-resolver.interface';
+import { InvoiceCQRSServiceImpl } from './invoice-cqrs.service';
 
 @Resolver(() => Invoice)
 export class InvoiceResolver implements IInvoiceResolver {
-  constructor(private readonly invoiceService: InvoiceServiceImpl) {}
+  constructor(
+    private readonly invoiceService: InvoiceServiceImpl,
+    private readonly invoiceCqrsService: InvoiceCQRSServiceImpl,
+  ) {}
 
   @Query(() => [Invoice])
   async findAllInvoices(): Promise<Invoice[]> {
@@ -79,6 +83,6 @@ export class InvoiceResolver implements IInvoiceResolver {
   async createOneInvoiceByCommand(
     @Args('createInvoiceInput') createInvoiceInput: CreateInvoiceInput,
   ): Promise<Invoice> {
-    return await this.invoiceService.createInvoiceByCommand(createInvoiceInput);
+    return await this.invoiceCqrsService.createOne(createInvoiceInput);
   }
 }
