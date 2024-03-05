@@ -16,6 +16,7 @@ export class InvoiceFactory {
   create(createInvoiceOptions: CreateInvoiceOptions): Invoice {
     return this.eventPublisher.mergeObjectContext(
       new Invoice({
+        id: null,
         ...createInvoiceOptions,
         customer: null,
         project: null,
@@ -26,7 +27,7 @@ export class InvoiceFactory {
     );
   }
 
-  reconstitute(properties: InvoiceProps): InvoiceEntity {
+  reconstitute(properties: InvoiceProps): Invoice {
     return this.eventPublisher.mergeObjectContext(new Invoice(properties));
   }
 
@@ -34,19 +35,16 @@ export class InvoiceFactory {
     const properties = JSON.parse(JSON.stringify(model)) as InvoiceProps;
     return {
       ...properties,
-    };
+      id: model.id,
+    } as Invoice;
   }
 
   entityToModel(entity: InvoiceEntity): Invoice {
     return this.reconstitute({
-      amount: entity.amount,
-      currency: Currency[entity.currency] as Currency,
-      paymentTerm: entity.paymentTerm,
-      description: entity.description,
-      isPaid: entity.isPaid,
-      customer: entity.customer,
-      project: entity.project,
+      ...entity,
       id: entity.id,
+      currency: Currency[entity.currency] as Currency,
+      storno: entity.storno ? this.entityToModel(entity.storno) : null,
     });
   }
 }
