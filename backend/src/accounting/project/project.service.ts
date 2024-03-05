@@ -4,8 +4,8 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { NotFoundException } from '@nestjs/common';
-import { AccountingService } from '../types';
 import { InvoiceServiceImpl } from '../invoice/invoice.service';
+import { AccountingService } from '../accounting-service.interface';
 
 export class ProjectService implements AccountingService<Project> {
   constructor(

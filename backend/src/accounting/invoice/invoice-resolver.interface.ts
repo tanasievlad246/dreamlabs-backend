@@ -1,7 +1,7 @@
 import { InvoiceIdInput } from './dto/invoice-id.input';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
-import { Invoice } from './invoice.entity';
+import { Invoice } from './domain/invoice.entity';
 
 export interface IInvoiceResolver {
   findAllInvoices(): Promise<Invoice[]>;

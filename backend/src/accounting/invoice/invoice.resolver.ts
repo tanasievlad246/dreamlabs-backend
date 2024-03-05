@@ -1,5 +1,5 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { Invoice } from './invoice.entity';
+import { Invoice } from './domain/invoice.entity';
 import { InvoiceServiceImpl } from './invoice.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';

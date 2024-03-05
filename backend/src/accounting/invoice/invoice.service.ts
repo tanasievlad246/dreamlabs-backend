@@ -4,13 +4,13 @@ import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { CustomerService } from '../customer/customer.service';
 import { ProjectService } from '../project/project.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
-import { Invoice } from './invoice.entity';
+import { Invoice } from './domain/invoice.entity';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
 import {
   AssignInvoiceToCustomerInput,
   AssignInvoiceToProjetInput,
 } from './dto/assign-invoice.input';
-import { InvoiceService } from '../types';
+import { InvoiceService } from './invoice-service.interface';
 
 @Injectable()
 export class InvoiceServiceImpl implements InvoiceService {

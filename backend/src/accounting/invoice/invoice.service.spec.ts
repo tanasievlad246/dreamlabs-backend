@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { InvoiceServiceImpl } from './invoice.service';
 import { mockDataSource, mockInvoiceRepository, serviceMock } from '../mocks';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Invoice } from './invoice.entity';
+import { Invoice } from './domain/invoice.entity';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { CustomerService } from '../customer/customer.service';
 import { ProjectService } from '../project/project.service';

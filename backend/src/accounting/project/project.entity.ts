@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Invoice } from '../invoice/invoice.entity';
+import { Invoice } from '../invoice/domain/invoice.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @Entity({

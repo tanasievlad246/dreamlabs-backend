@@ -12,7 +12,7 @@ import { NotFoundException } from '@nestjs/common';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './project.entity';
 import { InvoiceServiceImpl } from '../invoice/invoice.service';
-import { Invoice } from '../invoice/invoice.entity';
+import { Invoice } from '../invoice/domain/invoice.entity';
 
 describe('ProjectService', () => {
   let service: ProjectService;

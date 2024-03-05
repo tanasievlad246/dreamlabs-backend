@@ -1,5 +1,5 @@
 import { Customer } from './customer/customer.entity';
-import { Invoice } from './invoice/invoice.entity';
+import { Invoice } from './invoice/domain/invoice.entity';
 import { Project } from './project/project.entity';
 
 export const EXAMPLE_CUSTOMER: Customer = {

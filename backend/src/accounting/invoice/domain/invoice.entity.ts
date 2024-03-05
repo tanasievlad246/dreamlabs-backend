@@ -8,8 +8,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Customer } from '../customer/customer.entity';
-import { Project } from '../project/project.entity';
+import { Customer } from '../../customer/customer.entity';
+import { Project } from '../../project/project.entity';
 
 @Entity({
   name: 'invoices',
