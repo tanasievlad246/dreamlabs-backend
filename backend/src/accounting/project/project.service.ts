@@ -3,13 +3,14 @@ import { Project } from './project.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
-import { NotFoundException } from '@nestjs/common';
-import { InvoiceServiceImpl } from '../invoice/invoice.service';
+import { Inject, NotFoundException, forwardRef } from '@nestjs/common';
 import { AccountingService } from '../accounting-service.interface';
+import { InvoiceServiceImpl } from '../invoice/invoice.service';
 
 export class ProjectService implements AccountingService<Project> {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
+    @Inject(forwardRef(() => InvoiceServiceImpl))
     private readonly invoiceService: InvoiceServiceImpl,
   ) {}
 

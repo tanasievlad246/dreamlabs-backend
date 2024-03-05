@@ -3,7 +3,7 @@ import { Customer } from './customer.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateCustomerInput } from './dto/customer.input';
 import { UpdateCustomerInput } from './dto/update-customer.input';
-import { NotFoundException } from '@nestjs/common';
+import { Inject, NotFoundException, forwardRef } from '@nestjs/common';
 import { InvoiceServiceImpl } from '../invoice/invoice.service';
 import { AccountingService } from '../accounting-service.interface';
 
@@ -11,6 +11,7 @@ export class CustomerService implements AccountingService<Customer> {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepo: Repository<Customer>,
+    @Inject(forwardRef(() => InvoiceServiceImpl))
     private readonly invoiceService: InvoiceServiceImpl,
   ) {}
 

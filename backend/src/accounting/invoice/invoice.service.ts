@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { CustomerService } from '../customer/customer.service';
@@ -11,12 +16,17 @@ import {
   AssignInvoiceToProjetInput,
 } from './dto/assign-invoice.input';
 import { InvoiceService } from './invoice-service.interface';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateInvoiceCommand } from './command/createInvoice.command';
 
 @Injectable()
 export class InvoiceServiceImpl implements InvoiceService {
   constructor(
     @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
+    private readonly commandBus: CommandBus,
+    @Inject(forwardRef(() => CustomerService))
     private readonly customerService: CustomerService,
+    @Inject(forwardRef(() => ProjectService))
     private readonly projectService: ProjectService,
     private readonly dataSource: DataSource,
   ) {}
@@ -143,5 +153,18 @@ export class InvoiceServiceImpl implements InvoiceService {
       await invRepo.save(invoice);
     });
     return stornoInvoie;
+  }
+
+  async createInvoiceByCommand(inv: CreateInvoiceInput): Promise<Invoice> {
+    return await this.commandBus.execute(
+      new CreateInvoiceCommand(
+        inv.amount,
+        inv.currency,
+        inv.paymentTerm,
+        inv.customerId,
+        inv.projectId,
+        inv.description,
+      ),
+    );
   }
 }
