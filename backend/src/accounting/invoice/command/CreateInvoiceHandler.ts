@@ -3,12 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Invoice } from '../domain/invoice.entity';
 import { Repository } from 'typeorm';
 import { CreateInvoiceCommand } from './createInvoice.command';
-import moment from 'moment';
 import { InvoiceFactory } from '../domain/InvoiceFactory';
 import { InvoiceCreatedEvent } from '../event/InvoiceCreatedEvent';
 
 @CommandHandler(CreateInvoiceCommand)
-export class InvoiceCreatedHandler
+export class CreateInvoiceHandler
   implements ICommandHandler<CreateInvoiceCommand>
 {
   constructor(
@@ -22,7 +21,7 @@ export class InvoiceCreatedHandler
     const invoice = this.invoiceFactory.create({
       amount: command.amount,
       currency: command.currency,
-      paymentTerm: moment(command.paymentTerm).toDate(),
+      paymentTerm: new Date(command.paymentTerm),
     });
 
     const savedInvoice = await this.invoiceRepository.save(invoice);

@@ -9,7 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule, utilities } from 'nest-winston';
 import * as winston from 'winston';
-import { Logger } from 'winston';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphqlExceptionFilter } from './common/filters/gql-exception.filter';
 

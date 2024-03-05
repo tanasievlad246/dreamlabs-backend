@@ -156,15 +156,19 @@ export class InvoiceServiceImpl implements InvoiceService {
   }
 
   async createInvoiceByCommand(inv: CreateInvoiceInput): Promise<Invoice> {
-    return await this.commandBus.execute(
-      new CreateInvoiceCommand(
-        inv.amount,
-        inv.currency,
-        inv.paymentTerm,
-        inv.customerId,
-        inv.projectId,
-        inv.description,
-      ),
-    );
+    try {
+      return await this.commandBus.execute(
+        new CreateInvoiceCommand(
+          inv.amount,
+          inv.currency,
+          inv.paymentTerm,
+          inv.customerId,
+          inv.projectId,
+          inv.description,
+        ),
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }

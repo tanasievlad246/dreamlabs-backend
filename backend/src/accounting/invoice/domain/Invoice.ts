@@ -14,6 +14,7 @@ export type InvoiceEssentialProps = Readonly<
 
 export type InvoiceOptionalProps = Readonly<
   Partial<{
+    id: number;
     description: string;
     storno: Invoice;
     isPaid: boolean;

@@ -11,10 +11,16 @@ import { CustomerService } from './customer/customer.service';
 import { CustomerResolver } from './customer/customer.resolver';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { CommandBus } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
+import { InvoiceCreateEventHandler } from './invoice/event/InvoiceCreatedEventHandler';
+import { InvoiceFactory } from './invoice/domain/InvoiceFactory';
+import { CreateInvoiceHandler } from './invoice/command/CreateInvoiceHandler';
+
+const EventHandlers = [InvoiceCreateEventHandler];
+const CommandHandlers = [CreateInvoiceHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Invoice, Customer, Project])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([Invoice, Customer, Project])],
   providers: [
     {
       provide: APP_INTERCEPTOR,
@@ -26,7 +32,9 @@ import { CommandBus } from '@nestjs/cqrs';
     ProjectResolver,
     CustomerService,
     CustomerResolver,
-    CommandBus,
+    ...EventHandlers,
+    ...CommandHandlers,
+    InvoiceFactory,
   ],
 })
 export class AccountingModule {}
