@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Invoice } from '../domain/invoice.entity';
 import { Repository } from 'typeorm';
@@ -14,6 +14,7 @@ export class CreateInvoiceHandler
     @InjectRepository(Invoice)
     private readonly invoiceRepository: Repository<Invoice>,
     private readonly invoiceFactory: InvoiceFactory,
+    private readonly eventBus: EventBus,
   ) {}
 
   async execute(command: CreateInvoiceCommand) {
@@ -27,7 +28,7 @@ export class CreateInvoiceHandler
     const savedInvoice = await this.invoiceRepository.save(invoice);
 
     invoice.commit();
-    invoice.apply(
+    this.eventBus.publish(
       new InvoiceCreatedEvent(
         savedInvoice.id,
         savedInvoice.amount,
