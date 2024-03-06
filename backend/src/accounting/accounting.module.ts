@@ -12,10 +12,11 @@ import { CustomerResolver } from './customer/customer.resolver';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
-import { InvoiceCreateEventHandler } from './invoice/event/InvoiceCreatedEventHandler';
+import { InvoiceCreateEventHandler } from './invoice/event/handlers/invoice-created.event-handler';
 import { InvoiceFactory } from './invoice/domain/InvoiceFactory';
-import { CreateInvoiceHandler } from './invoice/command/handlers/CreateInvoiceHandler';
+import { CreateInvoiceHandler } from './invoice/command/handlers/create-invoice.handler';
 import { InvoiceCQRSServiceImpl } from './invoice/invoice-cqrs.service';
+import { QueryHandlers } from './invoice/query';
 
 const EventHandlers = [InvoiceCreateEventHandler];
 const CommandHandlers = [CreateInvoiceHandler];
@@ -36,6 +37,7 @@ const CommandHandlers = [CreateInvoiceHandler];
     InvoiceCQRSServiceImpl,
     ...EventHandlers,
     ...CommandHandlers,
+    ...QueryHandlers,
     InvoiceFactory,
   ],
 })
