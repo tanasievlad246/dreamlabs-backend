@@ -74,6 +74,13 @@ export class Invoice extends AggregateRoot implements InvoiceProps {
     this.project = project;
   }
 
+  /**
+   * Update invoice properties based on what properties are passed
+   */
+  merge(invoice: Invoice): void {
+    Object.assign(this, invoice);
+  }
+
   cancel(): Invoice {
     const amount = 0 - this.amount;
     this.storno = new Invoice({
