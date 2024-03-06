@@ -1,6 +1,5 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Invoice } from './domain/invoice.entity';
-import { InvoiceServiceImpl } from './invoice.service';
 import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
 import { InvoiceIdInput } from './dto/invoice-id.input';
@@ -9,10 +8,7 @@ import { InvoiceCQRSServiceImpl } from './invoice-cqrs.service';
 
 @Resolver(() => Invoice)
 export class InvoiceResolver implements IInvoiceResolver {
-  constructor(
-    private readonly invoiceService: InvoiceServiceImpl,
-    private readonly invoiceCqrsService: InvoiceCQRSServiceImpl,
-  ) {}
+  constructor(private readonly invoiceService: InvoiceCQRSServiceImpl) {}
 
   @Query(() => [Invoice])
   async findAllInvoices(): Promise<Invoice[]> {
@@ -77,12 +73,5 @@ export class InvoiceResolver implements IInvoiceResolver {
     return await this.invoiceService.generateStornoInvoice(
       generateInvoiceStornoInput.id,
     );
-  }
-
-  @Mutation(() => Invoice)
-  async createOneInvoiceByCommand(
-    @Args('createInvoiceInput') createInvoiceInput: CreateInvoiceInput,
-  ): Promise<Invoice> {
-    return await this.invoiceCqrsService.createOne(createInvoiceInput);
   }
 }
