@@ -8,7 +8,7 @@ import { CreateInvoiceInput } from './dto/invoice.input';
 import { UpdateInvoiceInput } from './dto/update-invoice-input';
 import { InvoiceService } from './invoice-service.interface';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateInvoiceCommand } from './command/commands/createInvoice.command';
+import { CreateInvoiceCommand } from './command/commands/create-invoice.command';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -34,6 +34,7 @@ export class InvoiceCQRSServiceImpl implements InvoiceService {
       throw error;
     }
   }
+
   findAll(): Promise<Invoice[]> {
     throw new Error('Method not implemented.');
   }
