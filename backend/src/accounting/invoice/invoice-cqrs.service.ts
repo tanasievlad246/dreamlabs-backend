@@ -10,6 +10,17 @@ import { InvoiceService } from './invoice-service.interface';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateInvoiceCommand } from './command/commands/create-invoice.command';
 import { Injectable } from '@nestjs/common';
+import { FindAllQuery } from './query/queries/find-all.query';
+import { FindOneQuery } from './query/queries/find-one.query';
+import {
+  AssignCustomerCommand,
+  DeleteInvoiceCommand,
+  GenerateStornoCommand,
+  MarkInvoiceAsPaidCommand,
+  UpdateInvoiceCommand,
+} from './command';
+import { MarkInvoiceAsUnpaidCommand } from './command/commands/mark-invoice-unpaid.command';
+import { AssignProjectCommand } from './command/commands/assign-project.command';
 
 @Injectable()
 export class InvoiceCQRSServiceImpl implements InvoiceService {
@@ -35,38 +46,73 @@ export class InvoiceCQRSServiceImpl implements InvoiceService {
     }
   }
 
-  findAll(): Promise<Invoice[]> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<Invoice[]> {
+    return await this.queryBus.execute(new FindAllQuery());
   }
-  findOne(id: number): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+
+  async findOne(id: number): Promise<Invoice> {
+    return await this.queryBus.execute(new FindOneQuery(id));
   }
-  deleteOne(id: number): Promise<DeleteResult> {
-    throw new Error('Method not implemented.');
+
+  async deleteOne(id: number): Promise<DeleteResult> {
+    return await this.commandBus.execute(new DeleteInvoiceCommand(id));
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateOne(id: number, input: UpdateInvoiceInput): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+
+  async updateOne(
+    id: number,
+    {
+      amount,
+      currency,
+      customerId,
+      description,
+      paymentTerm,
+      projectId,
+    }: UpdateInvoiceInput,
+  ): Promise<Invoice> {
+    return await this.commandBus.execute(
+      new UpdateInvoiceCommand(
+        id,
+        amount,
+        currency,
+        paymentTerm,
+        customerId,
+        projectId,
+        description,
+      ),
+    );
   }
-  markInvoiceAsPaid(id: number): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+
+  async markInvoiceAsPaid(id: number): Promise<Invoice> {
+    return await this.commandBus.execute(new MarkInvoiceAsPaidCommand(id));
   }
-  markInvoiceAsUnpaid(id: number): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+
+  async markInvoiceAsUnpaid(id: number): Promise<Invoice> {
+    return await this.commandBus.execute(new MarkInvoiceAsUnpaidCommand(id));
   }
-  generateStornoInvoice(id: number): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+
+  async generateStornoInvoice(id: number): Promise<Invoice> {
+    return await this.commandBus.execute(new GenerateStornoCommand(id));
   }
-  assignInvoiceToProject(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async assignInvoiceToProject(
     assignInvoiceToProjetInput: AssignInvoiceToProjetInput,
   ): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+    return await this.commandBus.execute(
+      new AssignProjectCommand(
+        assignInvoiceToProjetInput.invoiceId,
+        assignInvoiceToProjetInput.projectId,
+      ),
+    );
   }
-  assignInvoiceToCustomer(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async assignInvoiceToCustomer(
     assignInvoiceToCustomerInput: AssignInvoiceToCustomerInput,
   ): Promise<Invoice> {
-    throw new Error('Method not implemented.');
+    return await this.commandBus.execute(
+      new AssignCustomerCommand(
+        assignInvoiceToCustomerInput.invoiceId,
+        assignInvoiceToCustomerInput.customerId,
+      ),
+    );
   }
 }
