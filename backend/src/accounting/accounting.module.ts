@@ -14,12 +14,11 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { InvoiceCreateEventHandler } from './invoice/event/handlers/invoice-created.event-handler';
 import { InvoiceFactory } from './invoice/domain/InvoiceFactory';
-import { CreateInvoiceHandler } from './invoice/command/handlers/create-invoice.handler';
 import { InvoiceCQRSServiceImpl } from './invoice/invoice-cqrs.service';
 import { QueryHandlers } from './invoice/query';
+import { CommandHandlers } from './invoice/command';
 
 const EventHandlers = [InvoiceCreateEventHandler];
-const CommandHandlers = [CreateInvoiceHandler];
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([Invoice, Customer, Project])],
