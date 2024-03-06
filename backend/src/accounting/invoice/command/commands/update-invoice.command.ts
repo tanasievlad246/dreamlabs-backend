@@ -10,5 +10,6 @@ export class UpdateInvoiceCommand implements ICommand {
     public readonly customerId?: string,
     public readonly projectId?: string,
     public readonly description?: string,
+    public readonly isPaid?: boolean,
   ) {}
 }
