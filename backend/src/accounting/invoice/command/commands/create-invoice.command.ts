@@ -1,6 +1,7 @@
+import { ICommand } from '@nestjs/cqrs';
 import Currency from '../../../../common/enums/currency.enum';
 
-export class CreateInvoiceCommand {
+export class CreateInvoiceCommand implements ICommand {
   constructor(
     public readonly amount: number,
     public readonly currency: Currency,
