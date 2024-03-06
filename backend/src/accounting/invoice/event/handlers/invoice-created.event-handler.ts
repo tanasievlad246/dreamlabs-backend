@@ -1,5 +1,5 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { InvoiceCreatedEvent } from './InvoiceCreatedEvent';
+import { InvoiceCreatedEvent } from '../events/invoice-created.event';
 
 @EventsHandler(InvoiceCreatedEvent)
 export class InvoiceCreateEventHandler
