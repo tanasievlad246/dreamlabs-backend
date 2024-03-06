@@ -23,6 +23,9 @@ export type InvoiceOptionalProps = Readonly<
   }>
 >;
 
+export type UpdateInvoiceProps = Partial<InvoiceEssentialProps> &
+  Partial<Omit<InvoiceOptionalProps, 'id'>>;
+
 export type InvoiceProps = InvoiceEssentialProps &
   Required<InvoiceOptionalProps>;
 
@@ -77,8 +80,8 @@ export class Invoice extends AggregateRoot implements InvoiceProps {
   /**
    * Update invoice properties based on what properties are passed
    */
-  merge(invoice: Invoice): void {
-    Object.assign(this, invoice);
+  update(updateInvoiceProps: UpdateInvoiceProps): void {
+    Object.assign(this, updateInvoiceProps);
   }
 
   cancel(): Invoice {

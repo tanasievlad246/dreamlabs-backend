@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InvoiceFactory } from '../../domain/InvoiceFactory';
 import { NotFoundException } from '@nestjs/common';
+import { UpdateInvoiceProps } from '../../domain/Invoice';
+import * as moment from 'moment';
 
 @CommandHandler(UpdateInvoiceCommand)
 export class UpdateInvoiceHandler
@@ -26,17 +28,23 @@ export class UpdateInvoiceHandler
     }
 
     const invoice = this.invoiceFactory.entityToModel(invoiceEntity);
+    console.log(invoiceEntity);
+    console.log(invoice);
+    console.log(moment(command.paymentTerm).toDate());
+    const invoiceProps: UpdateInvoiceProps = {
+      amount: command.amount || invoice.amount,
+      currency: command.currency || invoice.currency,
+      paymentTerm: moment(command.paymentTerm, 'YYYY-MM-DD', true).isValid()
+        ? moment(command.paymentTerm, 'YYYY-MM-DD').toDate()
+        : invoice.paymentTerm,
+      description: command.description || invoice.description,
+      isPaid: command.isPaid || invoice.isPaid,
+    };
 
-    const updatedInvoice = this.invoiceFactory.create({
-      amount: command.amount,
-      currency: command.currency,
-      paymentTerm: new Date(command.paymentTerm),
-    });
-
-    updatedInvoice.merge(invoice);
+    invoice.update(invoiceProps);
 
     return await this.invoiceRepository.save(
-      this.invoiceFactory.modelToEntity(updatedInvoice),
+      this.invoiceFactory.modelToEntity(invoice),
     );
   }
 }
