@@ -5,6 +5,7 @@ import { Invoice } from '../../domain/invoice.entity';
 import { Repository } from 'typeorm';
 import { Customer } from '@/accounting/customer/customer.entity';
 import { InvoiceFactory } from '../../domain/InvoiceFactory';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(AssignCustomerCommand)
 export class AssignCustomerHandler
@@ -22,11 +23,19 @@ export class AssignCustomerHandler
       id: command.invoiceId,
     });
 
+    if (!invoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+
     const invoiceModel = this.invoiceFactory.entityToModel(invoice);
 
     const customer = await this.customerRepository.findOneBy({
       id: command.customerId,
     });
+
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
 
     invoiceModel.assignCustomer(customer);
 
