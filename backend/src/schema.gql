@@ -10,7 +10,7 @@ type Project {
 
 type Invoice {
   id: Int!
-  description: String!
+  description: String
   storno: Invoice
   amount: Float!
   currency: Currency!
@@ -63,7 +63,6 @@ type Mutation {
   markOneInvoiceAsPaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
   markOneInvoiceAsUnpaid(markInvoicePaidInput: InvoiceIdInput!): Invoice!
   generateOneStornoInvoice(generateInvoiceStornoInput: InvoiceIdInput!): Invoice!
-  createOneInvoiceByCommand(createInvoiceInput: CreateInvoiceInput!): Invoice!
   createOneProject(createProjectInput: CreateProjectInput!): Project!
   updateOneProject(updateOneProjectInput: UpdateProjectInput!): Project!
   deleteOneProject(deleteOneProjectInput: ProjectIdInput!): Boolean!

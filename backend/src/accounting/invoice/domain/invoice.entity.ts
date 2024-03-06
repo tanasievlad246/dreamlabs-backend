@@ -20,7 +20,9 @@ export class Invoice {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     nullable: true,
   })
