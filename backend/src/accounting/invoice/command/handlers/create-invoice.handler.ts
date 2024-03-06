@@ -2,9 +2,9 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Invoice } from '../../domain/invoice.entity';
 import { Repository } from 'typeorm';
-import { CreateInvoiceCommand } from '../commands/createInvoice.command';
+import { CreateInvoiceCommand } from '../commands/create-invoice.command';
 import { InvoiceFactory } from '../../domain/InvoiceFactory';
-import { InvoiceCreatedEvent } from '../../event/InvoiceCreatedEvent';
+import { InvoiceCreatedEvent } from '../../event/events/invoice-created.event';
 
 @CommandHandler(CreateInvoiceCommand)
 export class CreateInvoiceHandler
