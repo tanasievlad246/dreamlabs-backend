@@ -12,7 +12,7 @@ export { DeleteInvoiceCommand } from './commands/delete-invoice.command';
 export { UpdateInvoiceCommand } from './commands/update-invoice.command';
 export { GenerateStornoCommand } from './commands/generate-storno.command';
 export { MarkInvoiceAsPaidCommand } from './commands/mark-invoice-paid.command';
-export { MarkInvoiceAsUnpaid } from './commands/mark-invoice-unpaid.command';
+export { MarkInvoiceAsUnpaidCommand } from './commands/mark-invoice-unpaid.command';
 
 export { AssignCustomerHandler } from './handlers/assign-customer.handler';
 export { CreateInvoiceHandler } from './handlers/create-invoice.handler';
