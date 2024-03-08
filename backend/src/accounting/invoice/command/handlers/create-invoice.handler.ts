@@ -17,7 +17,7 @@ export class CreateInvoiceHandler
     private readonly eventBus: EventBus,
   ) {}
 
-  async execute(command: CreateInvoiceCommand) {
+  async execute(command: CreateInvoiceCommand): Promise<Invoice> {
     console.log('Command', command);
     const invoice = this.invoiceFactory.create({
       amount: command.amount,
@@ -27,15 +27,7 @@ export class CreateInvoiceHandler
 
     const savedInvoice = await this.invoiceRepository.save(invoice);
 
-    invoice.commit();
-    this.eventBus.publish(
-      new InvoiceCreatedEvent(
-        savedInvoice.id,
-        savedInvoice.amount,
-        savedInvoice.currency,
-        savedInvoice.paymentTerm,
-      ),
-    );
+    this.eventBus.publish(new InvoiceCreatedEvent(invoice));
 
     return savedInvoice;
   }

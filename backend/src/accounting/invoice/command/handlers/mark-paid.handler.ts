@@ -25,6 +25,7 @@ export class MarkInvoiceAsPaidHandler implements ICommandHandler {
     const invoice = this.invoiceFactory.entityToModel(invoiceEntity);
 
     invoice.markAsPaid();
+    invoice.commit();
 
     return await this.invoiceRepository.save(
       this.invoiceFactory.modelToEntity(invoice),

@@ -3,6 +3,7 @@ import { Project } from '@/accounting/project/project.entity';
 import Currency from '../../../common/enums/currency.enum';
 
 import { AggregateRoot } from '@nestjs/cqrs';
+import { MarkInvoiceAsPaidEvent } from '../event/events/mark-paid.event';
 
 export type InvoiceEssentialProps = Readonly<
   Required<{
@@ -47,6 +48,7 @@ export class Invoice extends AggregateRoot implements InvoiceProps {
 
   markAsPaid(): void {
     this.isPaid = true;
+    this.apply(new MarkInvoiceAsPaidEvent(this));
   }
 
   markAsUnpaid(): void {
